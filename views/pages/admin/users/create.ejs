@@ -1,0 +1,160 @@
+
+<div class="page-content">
+    <nav class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/brands/">Brands</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+    <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Add Brand</h4>
+                        <p class="card-description">sum text</p>
+                            <form action="/api/brands/store" method="post" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input id="name" name="name" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Description (TM) (optional)</label>
+                                    <textarea id="descriptionTm"  name="descriptionTm" class="form-control" maxlength="100" rows="8"
+                                    placeholder="This textarea has a limit of 100 chars."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Description (RU) (optional)</label>
+                                    <textarea id="descriptionRu" name="descriptionRu" class="form-control" maxlength="100" rows="8"
+                                    placeholder="This textarea has a limit of 100 chars."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressTm">Address (Tm)</label>
+                                    <input id="addressTm" class="form-control" type="text" name="addressTm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressRu">Address (Ru)</label>
+                                    <input id="addressRu" class="form-control" type="text" name="addressRu">
+                                </div>
+                                <div class="form-check form-check-flat form-check-primary">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" id="active" name="active" checked class="form-check-input">
+                                        Active
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-field">
+                                        <label class="active">Photos</label>
+                                        <div class="input-images-1" style="padding-top: .5rem;"></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary submitter" type="submit">
+                                    Save
+                                </button>
+                            </fieldset>
+                            </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/image-uploader.min.js"></script>
+
+<script>
+    $('input[type="file"]').on("change", function(){
+        alert(1)
+    })
+    let form={
+        name:'',
+        descriptionTm:'',
+        descriptionRu:'',
+        addressTm:'',
+        addressRu:'',
+        active:'on',
+    }
+    let files=[]
+    $(document).ready(function(){
+        onChange()
+        var toastMixin = Swal.mixin({
+            toast: true,
+            icon: 'success',
+            title: 'General Title',
+            animation: false,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+        $('form').submit(function(e) {
+            $('.submitter').prop('disabled', true);
+            e.preventDefault()
+            form.files=files
+            $.ajax({
+                url      : $(this).attr('action'),
+                type     : $(this).attr("method"),
+                data     : form,
+                dataType : 'json',
+                success  : function (res)
+                {
+                    // response = jQuery.parseJSON(response);
+                    console.log(res);
+                    if (res.success) {
+                        Swal.fire(
+                            'Good job!',
+                            res.message,
+                            'success'
+                        )
+                        $('form').trigger("reset");
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                        })
+                    }
+                    $('form').trigger("reset");
+                    $('.submitter').prop('disabled', false);
+                },
+                error    : function (error)
+                {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'internal server error',
+                        })
+
+                    $('.submitter').prop('disabled', false);
+                }
+            });
+        });
+    });
+
+    const onChange =()=>{
+        $('.input-images-1').imageUploader({
+            imagesInputName: 'photos',
+            multiple:false
+        });
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+        $('input[name="photos[]"]').change(async function(){
+            files=[]
+            await $.each($(this)[0].files,async function(i, file) {
+                let item =await toBase64(file)
+                files.push(item)
+            });
+        })
+        Object.keys(form).forEach(key => {
+            $(`#${key}`).change( function(){
+                form[key]=$(this).val()
+            })
+        });
+    }
+</script>

@@ -1,0 +1,42 @@
+<div class="main_cont">
+    <form method="post" action="/login"  class="login_from">
+      <h2>Giriş</h2>
+
+      <label class="login_label">
+        <p>Ulanyjy</p>
+        <input type="text" name="user_name" id="inp_name" required/>
+      </label>
+
+      <label class="login_label">
+        <p>Gizlin söz</p>
+        <input type="password" name="password" id="inp_pass" required/>
+      </label>
+      <br>
+      <div class="show_password">
+        <input type="checkbox" onclick="myFunction()"> <span>Gizlin sözi görkez</span>
+      </div>
+      <script>
+        function myFunction() {
+          var x = document.getElementById("inp_pass");
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
+        }
+
+        localStorage.removeItem('postData_tel')
+        localStorage.removeItem('formData_tel')
+        localStorage.removeItem('postData_tel1')
+        localStorage.removeItem('formData_tel1')
+        localStorage.removeItem('postData_blob_baza')
+        localStorage.removeItem('formData_blob_baza')
+        localStorage.removeItem('postData_active1')
+        localStorage.removeItem('formData_active1')
+
+        </script>
+      <button id="login_btn" type="submit">Giriş</button>
+    </form>
+  </div>
+
+

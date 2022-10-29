@@ -1,0 +1,182 @@
+
+<div class="page-content">
+    <nav class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/categories/">categories</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+    <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Edit category</h4>
+                        <p class="card-description">sum text</p>
+                            <form action="/api/categories/update/" method="post" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="nameTm">Name (TM)</label>
+                                    <input id="nameTm" name="nameTm" value="<%= JSON.parse(data.name).tm %>" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nameRu">Name (RU)</label>
+                                    <input id="nameRu" name="nameRu" value="<%= JSON.parse(data.name).ru %>" class="form-control" type="text">
+                                </div>
+                               <div class="form-group">
+                                    <label for="email">Description (TM) (optional)</label>
+                                    <textarea id="descriptionTm"  name="descriptionTm" class="form-control" maxlength="100" rows="8"
+                                    placeholder="This textarea has a limit of 100 chars."><%= JSON.parse(data.description).tm %></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Description (RU) (optional)</label>
+                                    <textarea id="descriptionRu" name="descriptionRu" class="form-control" maxlength="100" rows="8"
+                                    placeholder="This textarea has a limit of 100 chars."><%= JSON.parse(data.description).ru %></textarea>
+                                </div>
+                                <div class="form-group">
+									<label>Parent</label>
+									<select class="select2 w-100" name="parentId" id="parentId">
+										<option value="">Parent not</option>
+                                        <% categories.forEach(element => { %>
+                                            <option value="<%=element.id%>"<% if (element.id==data.parentId) { %>
+                                            selected
+                                            <% } %>><%=element.name%></option>
+                                        <% }) %>
+									</select>
+								</div>
+                                <div class="form-group">
+                                    <label for="order">order </label>
+                                    <input id="order" class="form-control"value="<%= data.order %>" type="text" name="order">
+                                </div>
+                                <div class="form-check form-check-flat form-check-primary">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" id="active" name="active"<%= data.active  ? 'checked' : '' %>  class="form-check-input">
+                                        Active
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-field">
+                                        <label class="active">Photos</label>
+                                        <div class="input-images-1" style="padding-top: .5rem;"></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary submitter" type="submit">
+                                    Save
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script type="text/javascript"  src="/assets/vendors/select2/select2.min.js"></script>
+<script type="text/javascript" src="/assets/js/image-uploader.min.js"></script>
+<script>
+    let form={
+        nameTm:'',
+        nameRu:'',
+        descriptionTm:'',
+        descriptionRu:'',
+        parentId:null,
+        order:'',
+        active:'on',
+    }
+    let files=[];
+    let deleted=[];
+</script>
+<script>
+    const getImages=async(documents)=>{
+        let preloaded =[]
+        let base_url = window.location.origin+'/uploads';
+        for (let i = 0; i < documents.length; i++) {
+            const el = documents[i];
+            preloaded.push({id: el.id, src: base_url+el.path})
+        }
+        return preloaded
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    const fileInit = async()=>{
+        $('.input-images-1').imageUploader({
+            preloaded:await getImages(JSON.parse('<%- JSON.stringify(data.documents) %>') ),
+            imagesInputName: 'photos',
+            multiple:false,
+        });
+
+        $('input[name="photos[]"]').change(async function(){
+            files=[]
+            await $.each($(this)[0].files,async function(i, file) {
+                let item =await toBase64(file)
+                files.push(item)
+            });
+        })
+
+        $('.delete-image').click(async function(){
+            let parent= $(this).parent()
+            let src = parent.children()[0].src;
+            let id = $(parent.children()[2]).val()
+            if (src[0]=='h') {
+                deleted.push(id)
+            }
+        })
+
+        Object.keys(form).forEach(key => {
+            form[key]=$(`#${key}`).val()
+            $(`#${key}`).change( function(){
+                form[key]=$(this).val()
+            })
+        });
+    }
+    $(document).ready(function(){
+        fileInit()
+        $(".select2").select2();
+        $('form').submit(function(e) {
+            $('.submitter').prop('disabled', true);
+            e.preventDefault()
+            let id =window.location.href.split('/').pop()
+            form.files=files
+            form.deleted=deleted
+            $.ajax({
+                url      : $(this).attr('action')+id,
+                type     : 'post',
+                data     : form,
+                dataType : 'json',
+                success  : function (res){
+                    console.log(res);
+                    if (res.success) {
+                        Swal.fire(
+                            'Good job!',
+                            res.message,
+                            'success'
+                        )
+                        $('form').trigger("reset");
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                        })
+                    }
+                    $('form').trigger("reset");
+                    $('.submitter').prop('disabled', false);
+                },
+                error    : function (error)
+                {
+                    console.log(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error,
+                        })
+                    $('.submitter').prop('disabled', false);
+                }
+            });
+        });
+    });
+</script>

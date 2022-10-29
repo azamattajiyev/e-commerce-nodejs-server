@@ -1,0 +1,212 @@
+
+<div class="page-content">
+    <nav class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/products/">Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+    <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Add Product</h4>
+                        <p class="card-description">sum text</p>
+                            <form action="/api/products/store" method="post" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group">
+									<label>Pattern</label>
+                                    <select class="select2 w-100" name="patternId" id="patternId"></select>
+								</div>
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input id="price" name="price" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="priceLast">Price Last</label>
+                                    <input id="priceLast" name="priceLast" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="discount">Discount</label>
+                                    <input id="discount" name="discount" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+									<label>Unit</label>
+                                    <select class="select2 w-100" name="unitId" id="unitId">
+                                        <option value="" selected >Bosh</option>
+                                        <% units.forEach(element => { %>
+                                            <option value="<%= element.id %>" ><%= element.name %> (<%= element.key %>)</option>
+                                        <% }) %>
+                                    </select>
+								</div>
+                                <div class="form-group">
+									<label>Sizes</label>
+                                    <select class="select2 w-100" name="sizes[]" id="sizes" multiple="multiple">
+                                        <% sizes.forEach(element => { %>
+                                            <option value="<%= element.id %>" ><%= element.name %></option>
+                                        <% }) %>
+                                    </select>
+								</div>
+                                <div class="form-group">
+									<label>Colors</label>
+                                    <select class="select2 w-100" name="colors[]" id="colors" multiple="multiple">
+                                        <% colors.forEach(element => { %>
+                                            <option value="<%= element.id %>" data-color="<%= element.code %>"><span style="background-color:'<%= element.code %>';height: 14px;width: 14px;"><%= element.code %></span> <%= element.name %> </option>
+                                        <% }) %>
+                                    </select>
+								</div>
+                                <div class="form-group">
+                                    <label for="amount">Amount</label>
+                                    <input id="amount" name="amount" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="barcode">Barcode</label>
+                                    <input id="barcode" name="barcode" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="order">order</label>
+                                    <input id="order" name="order" class="form-control" type="number">
+                                </div>
+                                <div class="form-check form-check-flat form-check-primary">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" id="active" name="active" checked class="form-check-input">
+                                        Active
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary submitter" type="submit">
+                                    Save
+                                </button>
+                            </fieldset>
+                            </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script src="/assets/vendors/select2/select2.min.js"></script>
+
+<script>
+    let form={
+        patternId:null,
+        order:1,
+        price:'',
+        priceLast:'',
+        discount:'',
+        unitId:null,
+        sizeId:null,
+        colorId:null,
+        amount:'',
+        barcode:'',
+        active:'on',
+        colors:[],
+        sizes:[]
+    }
+    $(document).ready(function(){
+        onChange()
+        $('form').submit(function(e) {
+            $('.submitter').prop('disabled', true);
+            e.preventDefault()
+            $.ajax({
+                url      : $(this).attr('action'),
+                type     : $(this).attr("method"),
+                data     : form,
+                dataType : 'json',
+                success  : function (res)
+                {
+                    if (res.success) {
+                        Swal.fire(
+                            'Good job!',
+                            res.message,
+                            'success'
+                        )
+                        $('form').trigger("reset");
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                        })
+                    }
+                    $('form').trigger("reset");
+                    $('.submitter').prop('disabled', false);
+                },
+                error    : function (error)
+                {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'internal server error',
+                        })
+                    $('.submitter').prop('disabled', false);
+                }
+            });
+        });
+    });
+
+    const onChange =()=>{
+        Object.keys(form).forEach(key => {
+            $(`#${key}`).change( function(){
+                form[key]=$(this).val()
+            })
+        });
+        $('#colors').select2({
+            placeholder: 'Select colors',
+        })
+        $('#sizes').select2({
+            placeholder: 'Select sizes',
+        })
+        $("#patternId").select2({
+            placeholder: 'Select',
+            minimumInputLength: 1,
+            templateResult: formatState, //this is for append country flag.
+            ajax: {
+                url: `/api/patterns`,
+                dataType: 'json',
+                type: "POST",
+                delay: 250,
+                cache: true,
+                data: function (params) {
+                    console.log(params);
+                    return {
+                        search: {
+                            name:params.term
+                        },
+                        page:1,
+                        limit:10
+                    };
+                },
+                processResults: function (data,params) {
+                    params.page = params.page || 1;
+                    console.log(data);
+                    return {
+                        results: $.map(data.data.tabledata, function (item) {
+                            let url='/assets/images/placeholder.jpg'
+                            if (item.documents.length>0) {
+                                url='/uploads'+item.documents[0].path;
+                            }
+                            return {
+                                text: item.name+', '+item.brand.name+', '+item.cat.name+', copyed('+item.children.length+')',
+                                id: item.id,
+                                url
+                            }
+                        }),
+                        pagination: {
+                            more: (params.page * 10) < data.totalCount
+                        }
+                    };
+                }
+
+            }
+        });
+    }
+    function formatState (state) {
+        console.log(state);
+        if (!state.id) {
+            return state.text;
+        }
+        var $state = $(
+            '<span><img src="'+ state.url+'" class="wd-35"/> ' +state.text+ '</span>'
+        );
+        return $state;
+    };
+</script>

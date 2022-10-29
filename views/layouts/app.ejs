@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <script src="/assets/js/jquery-3.6.0.js"></script>
+
+  </head>
+
+  <body>
+
+
+
+    <%- body %>
+
+
+    <div class="preloader remove_visible">
+      <div class="pre_info">
+          <h2>Maglumat gozlenilýär</h2>
+          <h4>Garaşmagyňyzy haýyş edýaris</h4>
+          <img src="/assets/images/preloader2.gif" alt="preloader">
+      </div>
+    </div>
+
+    <script src="/assets/js/jquery.cookie.min.js"></script>
+    <script src="/assets/js/crypto_local.js"></script>
+    <script src="/assets/js/script.js"></script>
+    <!-- <script src="/assets/js/route.js"></script> -->
+    <!-- <script src="assets/js/get.js"></script> -->
+    <script>
+      $(document).ready(function(){
+        let lang=$(html).attr('lang')
+        let json =$('.tr_lang').text()
+        console.log(json,lang);
+      })
+    </script>
+  </body>
+</html>
