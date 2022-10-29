@@ -29,13 +29,13 @@ app.use(session({
 }));
 app.use(cookieParser());
 
-const db = require("./models");
-db.sequelize.sync({})// force: true
-.then(() => {
-  console.log("Drop and re-sync db.");
-}).catch((err) => {
-  console.log("Failed to sync db: " + err.message);
-});
+// const db = require("./models");
+// db.sequelize.sync({})// force: true
+// .then(() => {
+//   console.log("Drop and re-sync db.");
+// }).catch((err) => {
+//   console.log("Failed to sync db: " + err.message);
+// });
 
 app.use('/', router);
 // catch 404 and forward to error handler
