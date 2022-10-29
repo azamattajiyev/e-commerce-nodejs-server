@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "build": "npm install && npm run build ",
     "dev": "nodemon ./bin/www",
-    "install": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate && sequelize-cli db:seed:all"
+    "seed": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate && sequelize-cli db:seed:all"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
