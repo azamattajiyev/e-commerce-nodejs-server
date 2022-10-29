@@ -5,3 +5,4 @@
 .env
 /.idea
 /.vscode
+/config/config.json
