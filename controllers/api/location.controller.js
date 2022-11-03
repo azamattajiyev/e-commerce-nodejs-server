@@ -146,21 +146,21 @@ exports.active =async (req, res) => {
   }
 };
 // Delete a Location with the specified id in the request
-exports.delete =(req, res) => {
-  const id = req.params.id;
-  Location.destroy({
-    where: { id: id }
-  })
-  .then(num => {
+exports.delete = async(req, res) => {
+  try {
+    const id = req.params.id;
+    const num=await Location.destroy({
+      where: { id: id }
+    })
     if (num == 1) {
-      res.status(200).json(successRes('',"Location was deleted successfully!"));
+      myCache.del( 'myLocation' )
+      res.status(200).json(successRes(null,"Location was deleted successfully!"));
     } else {
       res.status(200).json(errorRes(`Cannot delete Location with id=${id}. Maybe Location was not found!`));
     }
-  })
-  .catch(err => {
-    res.status(200).json(errorRes( "Could not delete Location with id=" + id));
-  });
+  } catch (error) {
+    res.status(200).json(errorRes( "Could not delete Location with id=" + id +" "+error.message));
+  }
 };
 
 exports.findAllselect2 = async(req, res) => {
