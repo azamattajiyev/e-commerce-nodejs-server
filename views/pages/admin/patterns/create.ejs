@@ -143,7 +143,15 @@
             $(`#${key}`).change( function(){
                 form[key]=$(this).val()
             })
-        });
+        }); 
+        $('#active').change(function(){
+            if($(this).is(":checked")) {
+                //'checked' event code
+                form.active='on'
+                return;
+            }
+            form.active=null
+        })
     }
 </script>
 <script>

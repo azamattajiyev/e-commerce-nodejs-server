@@ -179,6 +179,14 @@
                 form[key]=$(this).val()
             })
         });
+        $('#active').change(function(){
+            if($(this).is(":checked")) {
+                //'checked' event code
+                form.active='on'
+                return;
+            }
+            form.active=null
+        })
         $("#ownerIds").select2({
             placeholder: 'Select',
             minimumInputLength: 1,

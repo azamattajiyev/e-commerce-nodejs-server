@@ -33,7 +33,7 @@ module.exports = {
       },
       {
         name:'{"tm":"Dashoguz","ru":"Dashoguz"}',
-        parentId: null,
+        parentId: 1,
         active: 1,
         createdAt: new Date(),
         updatedAt: new Date()

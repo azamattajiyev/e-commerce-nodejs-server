@@ -10,14 +10,14 @@
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Brand</h4>
+                    <h4 class="card-title">Edit Product</h4>
                     <p class="card-description">sum text</p>
                         <form action="/api/products/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
                                     <label>Pattern</label>
                                     <select class="select2 w-100" name="patternId"  id="patternId">
-                                        <option value="<%= data.parent.id%>" selected="selected"><%= data.parent.name %></option>'
+                                        <option value="<%= data.parent.id%>" selected="selected"><%= data.parent.name %></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -156,6 +156,14 @@
                 form[key]=$(this).val()
             })
         });
+        $('#active').change(function(){
+            if($(this).is(":checked")) {
+                //'checked' event code
+                form.active='on'
+                return;
+            }
+            form.active=null
+        })
         $('#colors').select2({
             placeholder: 'Select colors',
             tags: true

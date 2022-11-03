@@ -1,0 +1,199 @@
+<div class="for_fixed" style="display: flex; justify-content: start; align-items: flex-start; flex-direction: row;">
+    <div class="page-content" style="width: 80%;">
+        <nav class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Locations</li>
+            </ol>
+        </nav>
+        <div class="row">
+            <div class="col-lg-12 col-xl-12 stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline mb-2">
+                            <h6 class="card-title mb-0">Locations</h6>
+                            <input type="hidden" id="route" value="locations">
+                            <div class="dropdown mb-2">
+                                <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                                    <a class="dropdown-item d-flex align-items-center" href="{'#'}"><i data-feather="eye" class="icon-sm mr-2"></i> <span class="">View</span></a>
+                                    <a class="dropdown-item d-flex align-items-center" href="{'#'}"><i data-feather="edit-2" class="icon-sm mr-2"></i> <span class="">Edit</span></a>
+                                    <a class="dropdown-item d-flex align-items-center" href="{'#'}"><i data-feather="trash" class="icon-sm mr-2"></i> <span class="">Delete</span></a>
+                                    <a class="dropdown-item d-flex align-items-center" href="{'#'}"><i data-feather="printer" class="icon-sm mr-2"></i> <span class="">Print</span></a>
+                                    <a class="dropdown-item d-flex align-items-center" href="{'#'}"><i data-feather="download" class="icon-sm mr-2"></i> <span class="">Download</span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <p class="card-description" style="white-space: nowrap;">
+                                <a class="btn btn-primary" href="/admin/locations/create">
+                                    Add location
+                                </a>
+                            </p>
+                            <div style=" width: 8rem;">
+                                <select class="select2" id="tbl_limit"name="limit">
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive mb-3">
+                            <table id="dataTableExample" class="table table-hover table-striped" style="width:100%">
+                                <thead>
+                                    <tr class="label_row">
+                                        <th style="width:5%">
+                                            #
+                                        </th>
+                                        <th>
+                                            name
+                                        </th>
+                                        <th>
+                                            parent
+                                        </th>
+                                        <th>
+                                            active
+                                        </th>
+                                    </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th>
+                                                <input id="name" name="name" class="form-control" type="text">
+                                            </th>
+                                            <th>
+                                                <input id="parent" name="parent" class="form-control" type="text">
+                                            </th>
+                                            <th>
+                                                <select class="select2" name="active" id="active">
+                                                    <option value="">both</option>
+                                                    <option value="1">true</option>
+                                                    <option value="0">false</option>
+                                                </select>
+                                            </th>
+                                            <th></th>
+                                        </tr>
+
+                                </thead>
+                                    <tbody>
+                                    </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination mb-0 justify-content-center">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="stretch-card fixedible" style="margin-top: 60px; width: 17.5%; height: 100%;">
+        <div class="card" id="show">
+
+        </div>
+    </div>
+</div>
+	<script src="/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/js/select2.js"></script>
+    <script src="/assets/vendors/owl.carousel/owl.carousel.min.js"></script>
+    <script src="/assets/js/carousel.js"></script>
+    <script src="/assets/js/custom-page.js"></script>
+    <script>
+        const setDataTable=(item,i)=>{
+            let pName=''
+            if (item.parent) {
+                pName=item.parent.name
+            }
+    $('tbody').append(`<tr id="row_${i}" class="delete_${item.id}" data-id="${item.id}">
+        <td >${i}</td>
+        <td  title="${item.name}">
+            ${item.name}
+        </td>
+        <td title="${pName}" class="tr_lang"> ${pName}</td>
+        <td>
+            ${activeBtn(item.active,item.id,i)}
+        <td>
+            <a href="/admin/Locations/edit/${item.id}">
+                <button type="button" class="btn btn-primary btn-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+            </a>
+            <button type="button" class="btn btn-danger btn-icon"
+                id="on_delete_${i}" data-del-id="${item.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+        </td>
+    </tr>`)
+    $('#row_'+i).on('click',function() {
+        showData($(this))
+    })
+    $('#on_delete_'+i).on('click',function() {
+        deleteData($(this))
+    })
+    $('#on_change_'+i).on('click',function() {
+        statusUpdate($(this))
+    })
+}
+
+const showData=(row)=>{
+    const found = datta.find(el => {
+        return el.id == row.attr('data-id');
+    });
+    $('#show').empty()
+    if (found) {
+        $('#show').append(`
+    <div class="card-body">
+        <h5 class="card-title" >${found.name}</h5>
+    </div>`)
+    $('.owl-animate-css').owlCarousel({
+            animateOut: 'slideOutDown',
+            animateIn: 'flipInX',
+            items:1,
+            margin:0,
+            stagePadding:0,
+            smartSpeed:450
+        });
+    }
+}
+
+let searchForm={
+    name:'',
+    description:'',
+    address:'',
+}
+var timer;
+const onChange =()=>{
+    Object.keys(searchForm).forEach(key => {
+        $(`#${key}`).keydown( function(){
+            searchForm[key]=$(this).val()
+            clearTimeout(timer);
+            var ms = 200; // milliseconds
+            timer = setTimeout(function() {
+                getData({
+                limit:10,
+                page:1,
+                search:searchForm
+            });
+            }, ms);
+        })
+    });
+    $(`#active`).change( function(){
+        searchForm['active']=$(this).val()
+        clearTimeout(timer);
+        var ms = 200; // milliseconds
+        timer = setTimeout(function() {
+            getData({
+            limit:10,
+            page:1,
+            search:searchForm
+        })
+        }, ms);
+    })
+}
+    </script>

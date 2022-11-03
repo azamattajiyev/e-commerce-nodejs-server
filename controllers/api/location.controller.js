@@ -9,30 +9,32 @@ exports.create =async (req, res) => {
     const {
       nameTm,
       nameRu,
-      parandId,
+      parentId,
       active
     } =req.body
     // Validate request
-    console.log(req.body);
-    if (!nameTm || !nameRu || !parandId || !active) {
+    // console.log(req.body);
+    if (
+      !nameTm ||
+      !nameRu ||
+      !parentId
+      ) {
       res.json(errorRes('Content can not be empty!'));
       return;
     }
     // Create a Location
     const newLocation = {
-      name:`{"tm":"${nameTm}","ru":"${nameRu}",}`,
-      description:`{"tm":"${descriptionTm}","ru":"${descriptionRu}",}`,
+      name:JSON.stringify({
+        tm:nameTm,
+        ru:nameRu
+      }),
+      parentId,
       active: active ? 1 : 0,
     };
-    // Save Location in the database
+    // Save Brand in the database
     let data = await Location.create(newLocation)
-    if (data && req.body.files) {
-      await Document.saveDocuments('location',data.dataValues.id,req.body.files)
-    } else {
-
-    }
     myCache.del( "myLocation" )
-    res.status(200).json(successRes(data,`${data.name} atly Location üstünlikli döredildi`));
+    res.status(200).json(successRes(data,`${data.name} atly location üstünlikli döredildi`));
   } catch (error) {
     res.status(200).json(errorRes(error.message));
   }
@@ -42,36 +44,29 @@ exports.findAll = async(req, res) => {
   try{
     var condition = {}
     let {page,limit,search} = req.body
-    console.log(page,limit,search);
+    // console.log(page,limit,search);
     if (search) {
       for (const [key, value] of Object.entries(search)) {
-        condition[key] = { [Op.like]: `%${value}%` }
+        if(value!=''){
+          condition[key] = { [Op.like]: `%${value}%` }
+        }
       }
     }
-    const locations= await Location.findAll({
+    const offset = page ? ((page-1)*limit) : 0;
+    // console.log(offset);
+    const data= await Location.findAndCountAll({
+      limit:parseInt(limit),
+      offset,
       where: condition,
+      attributes:['id','name','parentId','active'],
       include:[
         {model: Location,
           as:'parent',
-          attributes: {
-            exclude: [ 'createdAt','updatedAt']
-          },
+          attributes:['id','name','parentId']
         },
-        {model: Location,
-          as:'children',
-          attributes: {
-            exclude: [ 'createdAt','updatedAt']
-          },
-        },
-        // {model: Document, as: 'documents',
-        //   on: {
-        //     modelName: 'location',
-        //     modelId:{[Op.col]: 'location.id'}
-        //   }
-        // },
       ]
     })
-    res.status(200).json(paginateData(locations,limit,page));
+    res.status(200).json(paginateData(data,limit,page));
   } catch (error) {
     res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Locations."));
   }
@@ -80,8 +75,12 @@ exports.findAll = async(req, res) => {
 exports.findOne = async (req, res) => {
   try{
     const id = req.params.id;
-    const data = await Location.findByPk(id)
+    const data = await Location.findByPk(id,
+      {
+        attributes:['id','name','parentId']
+      })
     if (data) {
+      data.dataValues.parends=await Location.getAllParents(data.dataValues.parentId)
       res.status(200).json(successRes(data));
     } else {
       res.status(200).json(errorRes(`Cannot find Location with id=${id}.`));
@@ -91,27 +90,43 @@ exports.findOne = async (req, res) => {
   }
 };
 // Update a Location by the id in the request
-exports.update = (req, res) => {
+exports.update =async (req, res) => {
+  try{
     const id = req.params.id;
-    Location.update(req.body, {
-      where: { id: id }
+    const {
+      nameTm,
+      nameRu,
+      parentId,
+      active
+    } =req.body
+    // Validate request
+    console.log(req.body);
+    if (
+      !nameTm ||
+      !nameRu ||
+      !parentId
+      ) {
+      res.json(errorRes('Content can not be empty!'));
+      return;
+    }
+    // Create a Location
+    const newLocation = {
+      name:JSON.stringify({
+        tm:nameTm,
+        ru:nameRu
+      }),
+      parentId,
+      active: active ? 1 : 0,
+    };
+    let data =await Location.update(newLocation, {
+      where: { id:id }
     })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Location was updated successfully."
-          });
-        } else {
-          res.send({
-            message: `Cannot update Location with id=${id}. Maybe Location was not found or req.body is empty!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error updating Location with id=" + id
-        });
-      });
+    console.log(data);
+    res.status(200).json(successRes(null,"Location was updated successfully."));
+  } catch (error) {
+    console.log(error.message);
+    res.status(200).json(errorRes(error.message));
+  }
 };
 exports.active =async (req, res) => {
   const id = req.params.id;
@@ -155,7 +170,7 @@ exports.findAllselect2 = async(req, res) => {
     console.log(page,limit,search);
     if (myCache.has( "myLocation" )) {
       result=myCache.get( "myLocation" )
-      if (search.selectedIds) {
+      if (search && search.selectedIds) {
         result= selecteditem(result,search.selectedIds)
       }
       return res.status(200).json(successRes(result));
@@ -166,13 +181,8 @@ exports.findAllselect2 = async(req, res) => {
           parentId,
           active:true
         },
-        // order: [
-        //   // ['id', 'DESC'],
-        //   // ['order', 'ASC'],
-        // ],
         attributes:['id','name']
       })
-      // console.log(data);
       for (let i = 0; i < data.count; i++) {
         const el = data.rows[i];
           result.push({id:el.id,name:el.name,subcount:sub,selected:false})

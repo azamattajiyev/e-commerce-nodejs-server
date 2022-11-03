@@ -304,6 +304,45 @@ class PageController {
         })
       }
   }
+
+  async locations(req, res, next) {
+    res.render('pages/admin/locations', {
+      layout:'./layouts/admin/admin',
+      extractScripts: true
+    })
+  }
+
+  async locationCreate(req, res, next) {
+    res.render('pages/admin/locations/create', {
+      layout:'./layouts/admin/admin',
+      extractScripts: true
+    })
+  }
+
+  async locationEdit(req, res, next) {
+    const id = req.params.id;
+    const data = await Location.findOne({
+      where:{id},
+      attributes:['id','name','parentId','active'],
+      include:[
+        {model: Location,
+          as:'parent',
+          attributes:['id','name','parentId']
+        },
+      ]
+    })
+    if (data) {
+      res.render('pages/admin/locations/edit', {
+        data:data,
+        layout:'./layouts/admin/admin',
+        extractScripts: true
+      })
+    } else {
+      res.render('pages/error/404', {
+        message:`Cannot find Location with id=${id}.`,
+      })
+    }
+  }
 }
 
 module.exports = new PageController()
