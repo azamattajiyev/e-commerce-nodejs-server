@@ -225,7 +225,7 @@ exports.findAllselect2 = async(req, res) => {
     console.log(page,limit,search);
     if (myCache.has( "BrandSelect" )) {
       result=myCache.get( "BrandSelect" )
-      if (search.selectedIds) {
+      if (search && search.selectedIds) {
         result= selecteditem(result,search.selectedIds)
       }
       return res.status(200).json(successRes(result));
@@ -238,7 +238,7 @@ exports.findAllselect2 = async(req, res) => {
         result.push({id:el.id,name:el.name,subcount:0,selected:false})
     }
     const success = myCache.set('BrandSelect',result)
-    if (search.selectedIds) {
+    if (search && search.selectedIds) {
       result= selecteditem(result,search.selectedIds)
     }
     res.status(200).json(successRes(result));

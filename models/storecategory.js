@@ -13,13 +13,21 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  StoreCategory.saveStores1=async(sid, cids)=>{
+  StoreCategory.saveStores=async(sid, cids)=>{
     for (let j = 0; j < cids.length; j++) {
       await StoreCategory.create({
         categoryId: cids[j],
         storeId:sid,
       })
     }
+  }
+  StoreCategory.clearAllById=async(sid)=>{
+    await StoreCategory.destroy({
+      where: {
+        storeId:sid
+      },
+      truncate: false
+    })
   }
   StoreCategory.init({
     storeId: DataTypes.INTEGER,

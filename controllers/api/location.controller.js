@@ -155,7 +155,9 @@ exports.findAllselect2 = async(req, res) => {
     console.log(page,limit,search);
     if (myCache.has( "myLocation" )) {
       result=myCache.get( "myLocation" )
-      result= selecteditem(result,search.selectedIds)
+      if (search.selectedIds) {
+        result= selecteditem(result,search.selectedIds)
+      }
       return res.status(200).json(successRes(result));
     }
     const tree=async(parentId=null,sub=0)=>{
@@ -179,7 +181,9 @@ exports.findAllselect2 = async(req, res) => {
     }
     await tree()
     const success = myCache.set('myLocation',result)
-    result= selecteditem(result,search.selectedIds)
+    if (search && search.selectedIds) {
+      result= selecteditem(result,search.selectedIds)
+    }
     res.status(200).json(successRes(result));
   } catch (error) {
     res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Categories."));

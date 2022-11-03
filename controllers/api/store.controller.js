@@ -50,11 +50,11 @@ exports.create =async (req, res) => {
         tm:addressTm,
         ru:addressRu
       }),
-      locId:locId?locId:null,
+      locId,
       latitude: latitude?latitude:null,
       lingitude:lingitude?lingitude:null,
       rate: '5.0',
-      delivery_price: delivery_price?delivery_price:null,
+      delivery_price: delivery_price?delivery_price:0,
       delivery_price_ex: delivery_price_ex?delivery_price_ex:null,
       delivery_free: delivery_free? delivery_free:null
     };
@@ -121,15 +121,8 @@ exports.findAll = async(req, res) => {
 };
 exports.findAllselect2 = async(req, res) => {
   try{
-
     let result=[]
     let {page,limit,search} = req.body
-    console.log(page,limit,search);
-    // // if (myCache.has( "myKey" )) {
-    //   result=myCache.get( "myKey" )
-    //   result= selecteditem(result,search.selectedIds)
-    //   return res.status(200).json(successRes(result));
-    // }
     const tree=async(parentId=null,sub=0)=>{
       const data= await Store.findAndCountAll({
         where:{
@@ -245,6 +238,10 @@ exports.update =async (req, res) => {
       delivery_price_ex,
       delivery_free,
       order,
+      categories,
+      ownerIds,
+      files,
+      deleted,
     } =req.body
     // Validate request
     console.log(req.body);
@@ -252,7 +249,8 @@ exports.update =async (req, res) => {
       || !nameTm
       || !addressTm
       || !addressRu
-      || !phoneNumbers) {
+      || !phoneNumbers
+      || !locId) {
       res.json(errorRes('Content can not be empty!'));
       return;
     }
@@ -269,11 +267,11 @@ exports.update =async (req, res) => {
         tm:addressTm,
         ru:addressRu
       }),
-      locId:locId?locId:null,
+      locId,
       latitude: latitude?latitude:null,
       lingitude:lingitude?lingitude:null,
       rate: '5.0',
-      delivery_price: delivery_price?delivery_price:null,
+      delivery_price: delivery_price?delivery_price:0,
       delivery_price_ex: delivery_price_ex?delivery_price_ex:null,
       delivery_free: delivery_free? delivery_free:null
     };
@@ -282,17 +280,25 @@ exports.update =async (req, res) => {
     })
     console.log(data);
     if (data==1) {
-      if (req.body.deleted) {
-        await Document.clearAllById('Store',id,req.body.deleted)
+      if (deleted) {
+        await Document.clearAllById('Store',id,deleted)
       }
-      if(req.body.files){
-        await Document.saveDocuments('Store',id,req.body.files)
+      if(files){
+        await Document.saveDocuments('Store',id,files)
+      }
+      if (ownerIds) {
+        await UserStores.clearAllById(id)
+        await UserStores.saveStores(id,ownerIds)
+      }
+      if (categories) {
+        await store_categories.clearAllById(id)
+        await store_categories.saveStores(id,categories)
       }
     }
     // myCache.del( "myKey" )
     res.status(200).json(successRes(null,"Store was updated successfully."));
   } catch (error) {
-    console.log(err.message);
+    console.log(error.message);
     res.status(200).json(errorRes(error.message));
   }
 };

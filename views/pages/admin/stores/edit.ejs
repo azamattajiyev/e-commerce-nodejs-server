@@ -2,7 +2,7 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/products/">Products</a></li>
+            <li class="breadcrumb-item"><a href="/admin/stores/">Stores</a></li>
             <li class="breadcrumb-item active" aria-current="page">Edit</li>
         </ol>
     </nav>
@@ -10,9 +10,9 @@
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Brand</h4>
+                    <h4 class="card-title">Edit Store</h4>
                     <p class="card-description">sum text</p>
-                        <form action="/api/products/update/" method="post" enctype="multipart/form-data">
+                        <form action="/api/stores/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
                                     <label for="nameTm">Name (Tm)</label>
@@ -160,12 +160,6 @@
             }
         })
 
-        Object.keys(form).forEach(key => {
-            form[key]=$(`#${key}`).val()
-            $(`#${key}`).change( function(){
-                form[key]=$(this).val()
-            })
-        });
         $("#ownerIds").select2({
             placeholder: 'Select',
             minimumInputLength: 1,
@@ -208,6 +202,12 @@
                     };
                 }
             }
+        });
+        Object.keys(form).forEach(key => {
+            form[key]=$(`#${key}`).val()
+            $(`#${key}`).change( function(){
+                form[key]=$(this).val()
+            })
         });
     }
     function formatState (state) {
@@ -268,7 +268,7 @@
 </script>
 <script>
     //Locarion
-    let locId=parseInt('<%- data.location.id %>')
+    let locId=parseInt('<%- data.locId %>')
     $(document).ready(function(){
         getSelectData('locations','locId',{selectedIds:[locId]})
         $('#locId').select2({
@@ -276,16 +276,16 @@
             minimumResultsForSearch: 1,
             multiple: false,
         })
-        $("#locId").trigger("change");
     })
 
     //category
-    
     let categories=JSON.parse('<%- JSON.stringify(data.categories) %>')
+    console.log(categories);
     let ids=[]
     categories.forEach(element => {
         ids.push(element.id)
     });
+    console.log(ids);
     $(document).ready(function(){
         getSelectData('categories','categories',{selectedIds:ids})
         $('#categories').select2({
@@ -293,7 +293,6 @@
             minimumResultsForSearch: 1,
             multiple: true,
         })
-        $("#categories").trigger("change");
     })
     const addOption=(array,id)=>{
         array.forEach(element => {
@@ -307,6 +306,7 @@
             .attr("value", element.id )
             .text(str+element.name ));
         });
+        $("#"+id).trigger("change");
     }
     const getSelectData=(name,id,search={},)=>{
         const url=`/api/${name}/select2`

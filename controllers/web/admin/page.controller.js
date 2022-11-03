@@ -278,11 +278,11 @@ class PageController {
               attributes: [],
             }
           },
-          {
-            model:Location,
-            as:'location',
-            attributes:['id']
-          },
+          // {
+          //   model:Location,
+          //   as:'location',
+          //   attributes:['id']
+          // },
           {model: Document, as: 'documents',
           on: {
             modelName: 'Store',
@@ -291,6 +291,7 @@ class PageController {
         },
         ]
       })
+      console.log(data.location);
       if (data) {
         res.render('pages/admin/stores/edit', {
           data:data,

@@ -17,6 +17,14 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
+  UserStores.clearAllById=async(sid)=>{
+    await UserStores.destroy({
+      where: {
+        storeId:sid
+      },
+      truncate: false
+    })
+  }
   UserStores.init({
     userId: DataTypes.INTEGER,
     storeId: DataTypes.INTEGER,
