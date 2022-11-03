@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'storeId',
         otherKey: 'categoryId'
       });
+      this.belongsToMany(models.User, {
+        through: models.UserStores,
+        as:'owners',
+        foreignKey: 'storeId',
+        otherKey: 'userId'
+      });
     }
   }
   Store.init({

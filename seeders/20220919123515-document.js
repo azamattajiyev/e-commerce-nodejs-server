@@ -4,7 +4,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     let documents=[
       {
-        modelName: 'user',
+        modelName: 'User',
         modelId: 1,
         path: 'user/1.jpeg',
         type: 'image',
@@ -13,7 +13,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        modelName: 'user',
+        modelName: 'User',
         modelId: 2,
         path: 'user/2.jpeg',
         type: 'image',
@@ -22,7 +22,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        modelName: 'user',
+        modelName: 'User',
         modelId: 2,
         path: 'user/2.jpeg',
         type: 'image',

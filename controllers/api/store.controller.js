@@ -1,10 +1,10 @@
-const {Store, Document,Category,store_categories,Location}=require("../../models");
+const {Store, Document,Category,store_categories,Location,UserStores,}=require("../../models");
 const {paginateData,errorRes,successRes, selecteditem,} =require("../common.controller");
 const {Op} = require('sequelize');
 // const NodeCache = require("node-cache");
 // const myCache = new NodeCache( { stdTTL:1000,} );
 // Create and Save a new Store
-exports.create =async (req, res) => {
+exports.create =async (req, res) => { 
   try{
     const {
       nameTm,
@@ -20,6 +20,10 @@ exports.create =async (req, res) => {
       delivery_price,
       delivery_price_ex,
       delivery_free,
+      order,
+      categories,
+      ownerIds,
+      files,
     } =req.body
     // Validate request
     console.log(req.body);
@@ -27,7 +31,8 @@ exports.create =async (req, res) => {
       || !nameTm
       || !addressTm
       || !addressRu
-      || !phoneNumbers) {
+      || !phoneNumbers
+      || !locId) {
       res.json(errorRes('Content can not be empty!'));
       return;
     }
@@ -37,7 +42,7 @@ exports.create =async (req, res) => {
         tm:nameTm,
         ru:nameRu
       }),
-      order:1000,
+      order,
       active: active ? 1 : 0,
       phoneNumbers,
       email:email?email:null,
@@ -56,8 +61,16 @@ exports.create =async (req, res) => {
     // Save Store in the database
     // myCache.del( "myKey" )
     let data = await Store.create(newStore)
-    if (data && req.body.files) {
-      await Document.saveDocuments('store',data.dataValues.id,req.body.files)
+    if (data) {
+      if (files) {
+        await Document.saveDocuments('Store',data.dataValues.id,files)
+      }
+      if (ownerIds) {
+        await UserStores.saveStores(data.dataValues.id,ownerIds)
+      }
+      if (categories) {
+        await store_categories.saveStores1(data.dataValues.id,categories)
+      }
     }
     res.status(200).json(successRes(data,`${data.name} atly store üstünlikli döredildi`));
   } catch (error) {
@@ -89,22 +102,14 @@ exports.findAll = async(req, res) => {
         exclude: ['createdAt','updatedAt','storeId']
       },
       include:[
-        // {
-        //   model:Category,as:'categories',attributes: [
-        //     'id','name'
-        //   ],
-        //   through:{
-        //     attributes: [],
-        //   }
-        // },
         {
           model:Location,
           as:'location'
         },
         {model: Document, as: 'documents',
           on: {
-            modelName: 'store',
-            modelId:{[Op.col]: 'store.id'}
+            modelName: 'Store',
+            modelId:{[Op.col]: 'Store.id'}
           }
         },
       ]
@@ -239,6 +244,7 @@ exports.update =async (req, res) => {
       delivery_price,
       delivery_price_ex,
       delivery_free,
+      order,
     } =req.body
     // Validate request
     console.log(req.body);
@@ -255,7 +261,7 @@ exports.update =async (req, res) => {
         tm:nameTm,
         ru:nameRu
       }),
-      order:1000,
+      order,
       active: active ? 1 : 0,
       phoneNumbers,
       email:email?email:null,
@@ -277,10 +283,10 @@ exports.update =async (req, res) => {
     console.log(data);
     if (data==1) {
       if (req.body.deleted) {
-        await Document.clearAllById('store',id,req.body.deleted)
+        await Document.clearAllById('Store',id,req.body.deleted)
       }
       if(req.body.files){
-        await Document.saveDocuments('store',id,req.body.files)
+        await Document.saveDocuments('Store',id,req.body.files)
       }
     }
     // myCache.del( "myKey" )
@@ -293,7 +299,9 @@ exports.update =async (req, res) => {
 exports.active =async (req, res) => {
   const id = req.params.id;
   try{
-    const data = await Store.findByPk(id)
+    const data = await Store.findByPk(id,{
+      attributes:['id','active']
+    })
     if (data) {
       data.active=!data.active
       await data.save()
@@ -303,6 +311,7 @@ exports.active =async (req, res) => {
       res.status(200).json(errorRes(`Cannot find Store with id=${id}.`));
     }
   } catch (error) {
+    console.log(error);
     res.status(200).json(errorRes("Error retrieving Store with id=" + id+" "+error));
   }
 };

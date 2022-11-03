@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.Document,{as: 'documents', foreignKey:'modelId'});
+      this.belongsToMany(models.Store, {
+        through: models.UserStores,
+        as:'stores',
+        otherKey: "storeId",
+        foreignKey: "userId",
+      });
     }
   }
   User.init({

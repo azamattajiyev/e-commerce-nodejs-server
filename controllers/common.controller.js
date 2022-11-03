@@ -26,7 +26,6 @@ const successRes = (data,message='ok') => {
 
 const selecteditem=(array,ids=[])=>{
     for (let i = 0; i < array.length; i++) {
-        array[i];
         for (let j = 0; j < ids.length; j++) {
             const id = ids[j];
             if (id==array[i].id) {

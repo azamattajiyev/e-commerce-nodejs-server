@@ -37,31 +37,39 @@ exports.create =async (req, res) => {
   }
 };
 // Retrieve all Users from the database.
-exports.findAll = async(req, res) => {
+exports.findAll =  async(req, res) => {
   try{
     var condition = {}
     let {page,limit,search} = req.body
     console.log(page,limit,search);
     if (search) {
       for (const [key, value] of Object.entries(search)) {
-        condition[key] = { [Op.like]: `%${value}%` }
+        if(value!=''){
+          condition[key] = { [Op.like]: `%${value}%` }
+        }
       }
     }
-    const Users= await User.findAll({
+    const offset = page ? ((page-1)*limit) : 0;
+    const data= await User.findAndCountAll({
+      limit:parseInt(limit),
+      offset,
       where: condition,
+      subQuery: false,
+      attributes: {
+        exclude: ['createdAt','updatedAt','userId']
+      },
       include:[
         {model: Document, as: 'documents',
           on: {
-            modelName: 'user',
-            modelId:{[Op.col]: 'user.id'}
+            modelName: 'User',
+            modelId:{[Op.col]: 'User.id'}
           }
         },
       ]
     })
-    console.log();
-    res.status(200).json(paginateData(Users,limit,page));
+    res.status(200).json(paginateData(data,limit,page));
   } catch (error) {
-    res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Users."));
+    res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Products."));
   }
 };
 // Find a single User with an id

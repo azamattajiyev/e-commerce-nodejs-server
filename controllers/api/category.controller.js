@@ -2,7 +2,7 @@ const {Category, Document}=require("../../models");
 const {paginateData,errorRes,successRes, selecteditem,} =require("../common.controller");
 const {Op} = require('sequelize');
 const NodeCache = require("node-cache");
-const myCache = new NodeCache( { stdTTL:1000,} );
+const myCache = new NodeCache( { stdTTL:10000,} );
 // Create and Save a new Category
 exports.create =async (req, res) => {
   try{
@@ -112,7 +112,8 @@ exports.findAllselect2 = async(req, res) => {
     const tree=async(parentId=null,sub=0)=>{
       const data= await Category.findAndCountAll({
         where:{
-          parentId
+          parentId,
+          active:true
         },
         order: [
           // ['id', 'DESC'],

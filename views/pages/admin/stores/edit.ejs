@@ -15,71 +15,73 @@
                         <form action="/api/products/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label>Pattern</label>
-                                    <select class="select2 w-100" name="patternId"  id="patternId">
-                                        <option value="<%= data.parent.id%>" selected="selected"><%= data.parent.name %></option>'
-                                    </select>
+                                    <label for="nameTm">Name (Tm)</label>
+                                    <input id="nameTm" name="nameTm"value="<%= JSON.parse(data.name).tm %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="price">Price</label>
-                                    <input id="price" name="price" value="<%= data.price %>" class="form-control" type="text">
+                                    <label for="nameRu">Name (Ru)</label>
+                                    <input id="nameRu" name="nameRu"value="<%= JSON.parse(data.name).ru %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="priceLast">Price Last</label>
-                                    <input id="priceLast" name="priceLast" value="<%= data.priceLast %>" class="form-control" type="text">
+                                    <label for="phoneNumbers">Phone Numbers (1,2,...)</label>
+                                    <input id="phoneNumbers" name="phoneNumbers" class="form-control" type="text"
+                                    placeholder="99361234567,99362345678,..." value="<%= data.phoneNumbers %>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="discount">Discount</label>
-                                    <input id="discount" name="discount" value="<%= data.discount %>" class="form-control" type="text">
-                                </div>
+									<label>Email</label>
+                                    <input id="email" name="email" class="form-control" value="<%= data.email %>"type="email">
+								</div>
                                 <div class="form-group">
-                                    <label>Unit</label>
-                                    <select class="select2 w-100" name="unitId" id="unitId">
-                                        <option value="" >Bosh</option>
-                                        <% units.forEach(element => { %>
-                                            <option value="<%= element.id %>" <% if (element.id==data.unitId) { %>
-                                                selected
-                                            <% } %> ><%= element.name %> (<%= element.key %>)</option>
+									<label>Location</label>
+                                    <select class="select2 w-100" name="locId" id="locId"></select>
+								</div>
+                                <div class="form-group">
+									<label>Category</label>
+                                    <select class="select2 w-100" name="categories" id="categories"></select>
+								</div>
+                                <div class="form-group">
+									<label>Owner</label>
+                                    <select class="select2 w-100" name="ownerIds[]" id="ownerIds">
+                                        <% data.owners.forEach(element => { %>
+                                            <option value="<%= element.id%>" selected="selected"><%= element.name %></option>
                                         <% }) %>
                                     </select>
-                                </div>
+								</div>
                                 <div class="form-group">
-                                    <label>Sizes</label>
-                                    <select class="select2 w-100" name="sizes[]" id="sizes" multiple="multiple">
-                                        <% sizes.forEach(element => { %>
-                                            <option value="<%= element.id %>"<% if (data.sizes.find(x => x.id === element.id)) { %>
-                                                selected
-                                            <% } %> ><%= element.name %></option>
-                                        <% }) %>
-                                    </select>
-                                </div>
+									<label>Address (Tm)</label>
+                                    <input id="addressTm" name="addressTm"value="<%= JSON.parse(data.address).tm %>" class="form-control" type="text">
+								</div>
                                 <div class="form-group">
-                                    <label>Colors</label>
-                                    <select class="select2 w-100" name="colors[]" id="colors" multiple="multiple">
-                                        <% colors.forEach(element => { %>
-                                            <option value="<%= element.id %>"<% if (data.colors.find(x => x.id === element.id)) { %>
-                                                selected
-                                            <% } %>><span style="background-color:'<%= element.code %>';height: 14px;width: 14px;"><%= element.code %></span> <%= element.name %> </option>
-                                        <% }) %>
-                                    </select>
-                                </div>
+									<label>Address (Ru)</label>
+                                    <input id="addressRu" name="addressRu"value="<%= JSON.parse(data.address).ru %>" class="form-control" type="text">
+								</div>
                                 <div class="form-group">
-                                    <label for="amount">Amount</label>
-                                    <input id="amount" name="amount" value="<%= data.amount %>" class="form-control" type="text">
-                                </div>
+									<label>delivery_price</label>
+                                    <input id="delivery_price" name="delivery_price"value="<%= data.delivery_price %>" class="form-control" type="text">
+								</div>
                                 <div class="form-group">
-                                    <label for="barcode">Barcode</label>
-                                    <input id="barcode" name="barcode" value="<%= data.barcode %>" class="form-control" type="text">
-                                </div>
+									<label>delivery_price_ex</label>
+                                    <input id="delivery_price_ex" name="delivery_price_ex"value="<%= data.delivery_price_ex %>" class="form-control" type="text">
+								</div>
                                 <div class="form-group">
-                                    <label for="order">order</label>
-                                    <input id="order" name="order"  value="<%= data.order %>" class="form-control" type="number">
-                                </div>
+									<label>delivery_free</label>
+                                    <input id="delivery_free"value="<%= data.delivery_free %>" name="delivery_free" class="form-control" type="text">
+								</div>
+                                <div class="form-group">
+									<label>Order</label>
+                                    <input id="order" name="order" value="<%= data.order %>"class="form-control" type="number">
+								</div>
                                 <div class="form-check form-check-flat form-check-primary">
                                     <label class="form-check-label">
                                         <input type="checkbox" id="active" name="active" <%= data.active  ? 'checked' : '' %>  class="form-check-input">
                                         Active
                                     </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-field">
+                                        <label class="active">Photos</label>
+                                        <div class="input-images-1" style="padding-top: .5rem;"></div>
+                                    </div>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
                                     Save
@@ -91,36 +93,149 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/assets/js/image-uploader.min.js"></script>
 <script src="/assets/vendors/select2/select2.min.js"></script>
 
 <script>
     let form={
-        patternId:0,
-        order:1,
-        price:'',
-        priceLast:'',
-        discount:'',
-        unitId:0,
-        amount:'',
-        barcode:'',
+        nameRu:'',
+        nameTm:'',
+        email:'',
+        phoneNumbers:'',
+        addressTm:'',
+        addressRu:'',
+        delivery_price:'',
+        delivery_price_ex:'',
+        delivery_free:'',
+        locId:0,
+        order:1000,
+        ownerIds:[],
+        categories:[],
+        // latitude,
+        // lingitude,
         active:'on',
-        colors:[],
-        sizes:[],
     }
+    let files=[];
+    let deleted=[];
 </script>
 <script>
+    const getImages=async(documents)=>{
+        let preloaded =[]
+        let base_url = window.location.origin+'/uploads';
+        for (let i = 0; i < documents.length; i++) {
+            const el = documents[i];
+            preloaded.push({id: el.id, src: base_url+el.path})
+        }
+        return preloaded
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    const fileInit = async()=>{
+        $('.input-images-1').imageUploader({
+            preloaded:await getImages(JSON.parse('<%- JSON.stringify(data.documents) %>') ),
+            imagesInputName: 'photos',
+            multiple:false,
+        });
+
+        $('input[name="photos[]"]').change(async function(){
+            files=[]
+            await $.each($(this)[0].files,async function(i, file) {
+                let item =await toBase64(file)
+                files.push(item)
+            });
+        })
+
+        $('.delete-image').click(async function(){
+            let parent= $(this).parent()
+            let src = parent.children()[0].src;
+            let id = $(parent.children()[2]).val()
+            if (src[0]=='h') {
+                deleted.push(id)
+            }
+        })
+
+        Object.keys(form).forEach(key => {
+            form[key]=$(`#${key}`).val()
+            $(`#${key}`).change( function(){
+                form[key]=$(this).val()
+            })
+        });
+        $("#ownerIds").select2({
+            placeholder: 'Select',
+            minimumInputLength: 1,
+            multiple:true,
+            templateResult: formatState, //this is for append country flag.
+            ajax: {
+                url: `/api/users`,
+                dataType: 'json',
+                type: "POST",
+                delay: 250,
+                cache: true,
+                data: function (params) {
+                    console.log(params);
+                    return {
+                        search: {
+                            name:params.term
+                        },
+                        page:1,
+                        limit:10
+                    };
+                },
+                processResults: function (data,params) {
+                    params.page = params.page || 1;
+                    console.log(data);
+                    return {
+                        results: $.map(data.data.tabledata, function (item) {
+                            let url='/assets/images/placeholder.jpg'
+                            if (item.documents.length>0) {
+                                url='/uploads'+item.documents[0].path;
+                            }
+                            return {
+                                text: item.name,
+                                id: item.id,
+                                url
+                            }
+                        }),
+                        pagination: {
+                            more: (params.page * 10) < data.totalCount
+                        }
+                    };
+                }
+            }
+        });
+    }
+    function formatState (state) {
+        // console.log(state);
+        if (!state.id) {
+            return state.text;
+        }
+        var $state = $(
+            '<span>' +state.text+ '</span>'
+        );
+        return $state;
+    };
+
     $(document).ready(function(){
-        onChange()
+        fileInit()
         $('form').submit(function(e) {
             $('.submitter').prop('disabled', true);
             e.preventDefault()
             let id =window.location.href.split('/').pop()
+            form.files=files
+            form.deleted=deleted
             $.ajax({
                 url      : $(this).attr('action')+id,
                 type     : 'post',
                 data     : form,
                 dataType : 'json',
                 success  : function (res){
+                    console.log(res);
                     if (res.success) {
                         Swal.fire(
                             'Good job!',
@@ -150,75 +265,81 @@
             });
         });
     });
-    const onChange =()=>{
-        Object.keys(form).forEach(key => {
-            $(`#${key}`).change( function(){
-                form[key]=$(this).val()
-            })
-        });
-        $('#colors').select2({
-            placeholder: 'Select colors',
-            tags: true
+</script>
+<script>
+    //Locarion
+    let locId=parseInt('<%- data.location.id %>')
+    $(document).ready(function(){
+        getSelectData('locations','locId',{selectedIds:[locId]})
+        $('#locId').select2({
+            placeholder: 'Select location',
+            minimumResultsForSearch: 1,
+            multiple: false,
         })
-        $('#sizes').select2({
-            placeholder: 'Select sizes',
-            tags: true
-        })
-        $("#patternId").select2({
-            placeholder: 'Select',
-            minimumInputLength: 1,
-            templateResult: formatState, //this is for append country flag.
-            ajax: {
-                url: `/api/patterns`,
-                dataType: 'json',
-                type: "POST",
-                delay: 250,
-                cache: true,
-                data: function (params) {
-                    console.log(params);
-                    return {
-                        search: {
-                            name:params.term
-                        },
-                        page:1,
-                        limit:10
-                    };
-                },
-                processResults: function (data,params) {
-                    params.page = params.page || 1;
-                    console.log(data);
-                    return {
-                        results: $.map(data.data.tabledata, function (item) {
-                            let url='/assets/images/placeholder.jpg'
-                            if (item.documents.length>0) {
-                                url='/uploads'+item.documents[0].path;
-                            }
-                            return {
-                                text: item.name+', '+item.brand.name+', '+item.cat.name+', copyed('+item.children.length+')',
-                                id: item.id,
-                                url
-                            }
-                        }),
-                        pagination: {
-                            more: (params.page * 10) < data.totalCount
-                        }
-                    };
-                }
+        $("#locId").trigger("change");
+    })
 
+    //category
+    
+    let categories=JSON.parse('<%- JSON.stringify(data.categories) %>')
+    let ids=[]
+    categories.forEach(element => {
+        ids.push(element.id)
+    });
+    $(document).ready(function(){
+        getSelectData('categories','categories',{selectedIds:ids})
+        $('#categories').select2({
+            placeholder: 'Select category',
+            minimumResultsForSearch: 1,
+            multiple: true,
+        })
+        $("#categories").trigger("change");
+    })
+    const addOption=(array,id)=>{
+        array.forEach(element => {
+            let str=''
+            for (let i = 0; i < element.subcount; i++) {
+                str+='---'
             }
-        });
-        Object.keys(form).forEach(key => {
-            $(`#${key}`).trigger("change");
+            $("#"+id)
+            .append($("<option></option>")
+            .attr("selected", element.selected )
+            .attr("value", element.id )
+            .text(str+element.name ));
         });
     }
-    function formatState (state) {
-        console.log(state);
-        if (!state.id) {
-            return state.text;
-        }
-        var $state = $(
-            '<span><img src="'+ state.url+'" class="wd-35"/> ' +state.text+ '</span>'
-        );
-        return $state;
-    };
+    const getSelectData=(name,id,search={},)=>{
+        const url=`/api/${name}/select2`
+        const page=1
+        const limit=10
+        $.ajax({
+            url      : url,
+            type     : 'post',
+            data     : {
+                search,
+                page,
+                limit
+            },
+            dataType : 'json',
+            success  : function (res) {
+                console.log(res);
+                if (res.success) {
+                    addOption(res.data,id)
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                        })
+                }
+            },
+            error    : function (error) {
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                        })
+            }
+        });
+    }
 </script>

@@ -1,4 +1,4 @@
-const {Brand,Category, Document, Product, Unit, Size, Color, Store}=require("../../../models");
+const {Brand,Category, Document, Product, Unit, User, Size, Color, Store,Location}=require("../../../models");
 const {attributes,excludes} =require("../../common.controller");
 const {Op} = require('sequelize');
 
@@ -256,13 +256,37 @@ class PageController {
 
   async storeEdit(req, res, next) {
       const id = req.params.id;
-      const data =await Category.findOne({
+      const data =await Store.findOne({
         where:{id},
+        attributes: {
+          exclude: ['createdAt','updatedAt','storeId']
+        },
         include:[
+          {
+            model:Category,as:'categories',attributes: [
+              'id',
+            ],
+            through:{
+              attributes: [],
+            }
+          },
+          {
+            model:User,as:'owners',attributes: [
+              'id','name'
+            ],
+            through:{
+              attributes: [],
+            }
+          },
+          {
+            model:Location,
+            as:'location',
+            attributes:['id']
+          },
           {model: Document, as: 'documents',
           on: {
-            modelName: 'store',
-            modelId:{[Op.col]: 'store.id'}
+            modelName: 'Store',
+            modelId:{[Op.col]: 'Store.id'}
           }
         },
         ]
@@ -279,7 +303,6 @@ class PageController {
         })
       }
   }
-
 }
 
 module.exports = new PageController()

@@ -10,102 +10,116 @@
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add Store</h4>
+                        <h4 class="card-title">Add Stroe</h4>
                         <p class="card-description">sum text</p>
-                            <form action="/api/Stores/store" method="post" enctype="multipart/form-data">
+                        <form action="/api/stores/store" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-									<label>Pattern</label>
-                                    <select class="select2 w-100" name="patternId" id="patternId"></select>
+                                    <label for="nameTm">Name (Tm)</label>
+                                    <input id="nameTm" name="nameTm" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nameRu">Name (Ru)</label>
+                                    <input id="nameRu" name="nameRu" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phoneNumbers">Phone Numbers (1,2,...)</label>
+                                    <input id="phoneNumbers" name="phoneNumbers" class="form-control" type="text"
+                                    placeholder="99361234567,99362345678,...">
+                                </div>
+                                <div class="form-group">
+									<label>Email</label>
+                                    <input id="email" name="email" class="form-control" type="email">
 								</div>
                                 <div class="form-group">
-                                    <label for="price">Price</label>
-                                    <input id="price" name="price" class="form-control" type="text">
-                                </div>
-                                <div class="form-group">
-                                    <label for="priceLast">Price Last</label>
-                                    <input id="priceLast" name="priceLast" class="form-control" type="text">
-                                </div>
-                                <div class="form-group">
-                                    <label for="discount">Discount</label>
-                                    <input id="discount" name="discount" class="form-control" type="text">
-                                </div>
-                                <div class="form-group">
-									<label>Unit</label>
-                                    <select class="select2 w-100" name="unitId" id="unitId">
-                                        <option value="" selected >Bosh</option>
-                                        <!-- <% units.forEach(element => { %>
-                                            <option value="<%= element.id %>" ><%= element.name %> (<%= element.key %>)</option>
-                                        <% }) %> -->
+									<label>Location</label>
+                                    <select class="select2 w-100" name="locId" id="locId">
+                                        <option value="---" selected disabled>Bosh</option>
                                     </select>
 								</div>
                                 <div class="form-group">
-									<label>Sizes</label>
-                                    <select class="select2 w-100" name="sizes[]" id="sizes" multiple="multiple">
-                                        <!-- <% sizes.forEach(element => { %>
-                                            <option value="<%= element.id %>" ><%= element.name %></option>
-                                        <% }) %> -->
-                                    </select>
+									<label>Category</label>
+                                    <select class="select2 w-100" name="categories" id="categories"></select>
 								</div>
                                 <div class="form-group">
-									<label>Colors</label>
-                                    <select class="select2 w-100" name="colors[]" id="colors" multiple="multiple">
-                                        <!-- <% colors.forEach(element => { %>
-                                            <option value="<%= element.id %>" data-color="<%= element.code %>"><span style="background-color:'<%= element.code %>';height: 14px;width: 14px;"><%= element.code %></span> <%= element.name %> </option>
-                                        <% }) %> -->
-                                    </select>
+									<label>Owner</label>
+                                    <select class="select2 w-100" name="ownerIds[]" id="ownerIds"></select>
 								</div>
                                 <div class="form-group">
-                                    <label for="amount">Amount</label>
-                                    <input id="amount" name="amount" class="form-control" type="text">
-                                </div>
+									<label>Address (Tm)</label>
+                                    <input id="addressTm" name="addressTm" class="form-control" type="text">
+								</div>
                                 <div class="form-group">
-                                    <label for="barcode">Barcode</label>
-                                    <input id="barcode" name="barcode" class="form-control" type="text">
-                                </div>
+									<label>Address (Ru)</label>
+                                    <input id="addressRu" name="addressRu" class="form-control" type="text">
+								</div>
                                 <div class="form-group">
-                                    <label for="order">order</label>
+									<label>delivery_price</label>
+                                    <input id="delivery_price" name="delivery_price" class="form-control" type="text">
+								</div>
+                                <div class="form-group">
+									<label>delivery_price_ex</label>
+                                    <input id="delivery_price_ex" name="delivery_price_ex" class="form-control" type="text">
+								</div>
+                                <div class="form-group">
+									<label>delivery_free</label>
+                                    <input id="delivery_free" name="delivery_free" class="form-control" type="text">
+								</div>
+                                <div class="form-group">
+									<label>Order</label>
                                     <input id="order" name="order" class="form-control" type="number">
-                                </div>
+								</div>
                                 <div class="form-check form-check-flat form-check-primary">
                                     <label class="form-check-label">
                                         <input type="checkbox" id="active" name="active" checked class="form-check-input">
                                         Active
                                     </label>
                                 </div>
+                                <div class="form-group">
+                                    <div class="input-field">
+                                        <label class="active">Photos</label>
+                                        <div class="input-images-1" style="padding-top: .5rem;"></div>
+                                    </div>
+                                </div>
                                 <button class="btn btn-primary submitter" type="submit">
                                     Save
                                 </button>
                             </fieldset>
-                            </form>
+                        </form>
                     </div>
                 </div>
             </div>
     </div>
 </div>
+<script type="text/javascript" src="/assets/js/image-uploader.min.js"></script>
 <script src="/assets/vendors/select2/select2.min.js"></script>
 
 <script>
     let form={
-        patternId:null,
-        order:1,
-        price:'',
-        priceLast:'',
-        discount:'',
-        unitId:null,
-        sizeId:null,
-        colorId:null,
-        amount:'',
-        barcode:'',
+        nameRu:'',
+        nameTm:'',
+        email:'',
+        phoneNumbers:'',
+        addressTm:'',
+        addressRu:'',
+        delivery_price:'',
+        delivery_price_ex:'',
+        delivery_free:'',
+        locId:0,
+        order:1000,
+        ownerIds:[],
+        categories:[],
+        // latitude,
+        // lingitude,
         active:'on',
-        colors:[],
-        sizes:[]
     }
+    let files=[]
     $(document).ready(function(){
         onChange()
         $('form').submit(function(e) {
             $('.submitter').prop('disabled', true);
             e.preventDefault()
+            form.files=files
             $.ajax({
                 url      : $(this).attr('action'),
                 type     : $(this).attr("method"),
@@ -142,25 +156,36 @@
             });
         });
     });
-
     const onChange =()=>{
+        $('.input-images-1').imageUploader({
+            imagesInputName: 'photos',
+            multiple:true
+        });
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+        $('input[name="photos[]"]').change(async function(){
+            files=[]
+            await $.each($(this)[0].files,async function(i, file) {
+                let item =await toBase64(file)
+                files.push(item)
+            });
+        })
         Object.keys(form).forEach(key => {
             $(`#${key}`).change( function(){
                 form[key]=$(this).val()
             })
         });
-        $('#colors').select2({
-            placeholder: 'Select colors',
-        })
-        $('#sizes').select2({
-            placeholder: 'Select sizes',
-        })
-        $("#patternId").select2({
+        $("#ownerIds").select2({
             placeholder: 'Select',
             minimumInputLength: 1,
+            multiple:true,
             templateResult: formatState, //this is for append country flag.
             ajax: {
-                url: `/api/patterns`,
+                url: `/api/users`,
                 dataType: 'json',
                 type: "POST",
                 delay: 250,
@@ -185,7 +210,7 @@
                                 url='/uploads'+item.documents[0].path;
                             }
                             return {
-                                text: item.name+', '+item.brand.name+', '+item.cat.name+', copyed('+item.children.length+')',
+                                text: item.name,
                                 id: item.id,
                                 url
                             }
@@ -195,18 +220,82 @@
                         }
                     };
                 }
-
             }
         });
     }
     function formatState (state) {
-        console.log(state);
+        // console.log(state);
         if (!state.id) {
             return state.text;
         }
         var $state = $(
-            '<span><img src="'+ state.url+'" class="wd-35"/> ' +state.text+ '</span>'
+            '<span>' +state.text+ '</span>'
         );
         return $state;
     };
+</script>
+<script>
+    //location
+    $(document).ready(function(){
+        getSelectData('locations','locId',{selectedIds:[0]})
+        $('#locId').select2({
+            placeholder: 'Select location',
+            minimumResultsForSearch: 1,
+            multiple: false,
+        })
+        $("#locId").trigger("change");
+        getSelectData('categories','categories',{selectedIds:[0]})
+        $('#categories').select2({
+            placeholder: 'Select categories',
+            minimumResultsForSearch: 1,
+            multiple: true,
+        })
+        $("#categories").trigger("change");
+    })
+    const addOption=(array,id)=>{
+        array.forEach(element => {
+            let str=''
+            for (let i = 0; i < element.subcount; i++) {
+                str+='---'
+            }
+            $("#"+id)
+            .append($("<option></option>")
+            .attr("selected", element.selected )
+            .attr("value", element.id )
+            .text(str+element.name ));
+        });
+    }
+    const getSelectData=(name,id,search={},)=>{
+        const url=`/api/${name}/select2`
+        const page=1
+        const limit=10
+        $.ajax({
+            url      : url,
+            type     : 'post',
+            data     : {
+                search,
+                page,
+                limit
+            },
+            dataType : 'json',
+            success  : function (res) {
+                if (res.success) {
+                    addOption(res.data,id)
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                    })
+                }
+            },
+            error    : function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message,
+                })
+            }
+        });
+    }
 </script>

@@ -124,7 +124,7 @@
     const onChange =()=>{
         $('.input-images-1').imageUploader({
             imagesInputName: 'photos',
-            multiple:false
+            multiple:true
         });
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();

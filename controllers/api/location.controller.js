@@ -1,6 +1,8 @@
 const {Location, Document}=require("../../models");
-const {paginateData,errorRes,successRes} =require("../common.controller");
+const {paginateData,errorRes,successRes,selecteditem} =require("../common.controller");
 const {Op} = require('sequelize');
+const NodeCache = require("node-cache");
+const myCache = new NodeCache( { stdTTL:1000,} );
 // Create and Save a new Location
 exports.create =async (req, res) => {
   try{
@@ -29,6 +31,7 @@ exports.create =async (req, res) => {
     } else {
 
     }
+    myCache.del( "myLocation" )
     res.status(200).json(successRes(data,`${data.name} atly Location üstünlikli döredildi`));
   } catch (error) {
     res.status(200).json(errorRes(error.message));
@@ -117,12 +120,14 @@ exports.active =async (req, res) => {
     if (data) {
       data.active=!data.active
       await data.save()
+      myCache.del( "myLocation" )
       res.status(200).json(successRes(data));
+
     } else {
-      res.status(200).json(errorRes(`Cannot find Location with id=${id}.`));
+      res.status(200).json(errorRes(`Cannot find Category with id=${id}.`));
     }
   } catch (error) {
-    res.status(200).json(errorRes("Error retrieving Location with id=" + id+" "+error));
+    res.status(200).json(errorRes("Error retrieving Category with id=" + id+" "+error));
   }
 };
 // Delete a Location with the specified id in the request
@@ -148,20 +153,21 @@ exports.findAllselect2 = async(req, res) => {
     let result=[]
     let {page,limit,search} = req.body
     console.log(page,limit,search);
-    if (myCache.has( "myKey" )) {
-      result=myCache.get( "myKey" )
+    if (myCache.has( "myLocation" )) {
+      result=myCache.get( "myLocation" )
       result= selecteditem(result,search.selectedIds)
       return res.status(200).json(successRes(result));
     }
     const tree=async(parentId=null,sub=0)=>{
       const data= await Location.findAndCountAll({
         where:{
-          parentId
+          parentId,
+          active:true
         },
-        order: [
-          // ['id', 'DESC'],
-          ['order', 'ASC'],
-        ],
+        // order: [
+        //   // ['id', 'DESC'],
+        //   // ['order', 'ASC'],
+        // ],
         attributes:['id','name']
       })
       // console.log(data);
@@ -172,7 +178,7 @@ exports.findAllselect2 = async(req, res) => {
       }
     }
     await tree()
-    const success = myCache.set('myKey',result)
+    const success = myCache.set('myLocation',result)
     result= selecteditem(result,search.selectedIds)
     res.status(200).json(successRes(result));
   } catch (error) {

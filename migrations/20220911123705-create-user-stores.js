@@ -16,6 +16,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
       },
+      roleId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
