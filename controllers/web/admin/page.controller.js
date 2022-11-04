@@ -381,6 +381,45 @@ class PageController {
       })
     }
   }
+
+  async users(req, res, next) {
+    res.render('pages/admin/users', {
+      layout:'./layouts/admin/admin',
+      extractScripts: true
+    })
+  }
+
+  // async userCreate(req, res, next) {
+  //   res.render('pages/admin/users/create', {
+  //     layout:'./layouts/admin/admin',
+  //     extractScripts: true
+  //   })
+  // }
+
+  async userEdit(req, res, next) {
+    const id = req.params.id;
+    const data = await User.findOne({
+      where:{id},
+      attributes:['id','name'],
+      // include:[
+      //   {model: Permission,
+      //     as:'permissions',
+      //     attributes:['id']
+      //   },
+      // ]
+    })
+    if (data) {
+      res.render('pages/admin/users/edit', {
+        data:data,
+        layout:'./layouts/admin/admin',
+        extractScripts: true
+      })
+    } else {
+      res.render('pages/error/404', {
+        message:`Cannot find Location with id=${id}.`,
+      })
+    }
+  }
 }
 
 module.exports = new PageController()

@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Brands</li>
+                <li class="breadcrumb-item active" aria-current="page">Users</li>
             </ol>
         </nav>
         <div class="row">
@@ -10,8 +10,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Brands</h6>
-                            <input type="hidden" id="route" value="brand">
+                            <h6 class="card-title mb-0">Users</h6>
+                            <input type="hidden" id="route" value="users">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
@@ -27,9 +27,9 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <a class="btn btn-primary" href="/admin/brands/create">
-                                    Add brand
-                                </a>
+                                <!-- <a class="btn btn-primary" href="/admin/users/create">
+                                    Add User
+                                </a> -->
                             </p>
                             <div style=" width: 8rem;">
                                 <select class="select2" id="tbl_limit"name="limit">
@@ -52,10 +52,13 @@
                                             name
                                         </th>
                                         <th>
-                                            description
+                                            username
                                         </th>
                                         <th>
-                                            address
+                                            email
+                                        </th>
+                                        <th>
+                                            role
                                         </th>
                                         <th>
                                             active
@@ -67,10 +70,13 @@
                                                 <input id="name" name="name" class="form-control" type="text">
                                             </th>
                                             <th>
-                                                <input id="description" name="description" class="form-control" type="text">
+                                                <input id="username" name="username" class="form-control" type="text">
                                             </th>
                                             <th>
-                                                <input id="address" name="address" class="form-control" type="text">
+                                                <input id="email" name="email" class="form-control" type="text">
+                                            </th>
+                                            <th>
+                                                <input id="role" name="role" class="form-control" type="text">
                                             </th>
                                             <th>
                                                 <select class="select2" name="active" id="active">
@@ -117,13 +123,14 @@
             <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${item.name}">
             ${item.name}
         </td>
-        <td title="${item.description}" class="tr_lang"> ${item.description}</td>
-        <td title="${item.address}"> ${item.address}</td>
+        <td title="${item.username}" class="tr_lang"> ${item.username}</td>
+        <td title="${item.email}"> ${item.email}</td>
+        <td title="${item.role.name}"> ${item.role.name}</td>
         <td>
             ${activeBtn(item.active,item.id,i)}
         </td>
         <td>
-            <a href="/admin/brands/edit/${item.id}">
+            <a href="/admin/Users/edit/${item.id}">
                 <button type="button" class="btn btn-primary btn-icon">
                     <svg xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" viewBox="0 0 24 24"

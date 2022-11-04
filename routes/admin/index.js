@@ -29,9 +29,9 @@ const PageController = require('../../controllers/web/admin/page.controller.js')
     router.get('/locations/create',PageController.locationCreate)
     router.get('/locations/edit/:id',PageController.locationEdit)
 
-    router.get('/users',PageController.categories)
-    router.get('/users/create',PageController.categoryCreate)
-    router.get('/users/edit/:id',PageController.categoryEdit)
+    router.get('/users',PageController.users)
+    // router.get('/users/create',PageController.userCreate)
+    router.get('/users/edit/:id',PageController.userEdit)
 
     router.get('/roles',PageController.roles)
     router.get('/roles/create',PageController.roleCreate)
