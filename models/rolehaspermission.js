@@ -13,6 +13,22 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+  RoleHasPermission.savePermissions=async(rid, permissions)=>{
+    for(const permissionId of permissions) {
+      RoleHasPermission.create({
+          permissionId,
+          roleId:rid
+      })
+  }
+  }
+  RoleHasPermission.clearAllById=async(rid)=>{
+    await RoleHasPermission.destroy({
+      where: {
+        roleId:rid
+      },
+      truncate: false
+    })
+  }
   RoleHasPermission.init({
     roleId: DataTypes.INTEGER,
     permissionId: DataTypes.INTEGER

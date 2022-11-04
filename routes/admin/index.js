@@ -33,9 +33,9 @@ const PageController = require('../../controllers/web/admin/page.controller.js')
     router.get('/users/create',PageController.categoryCreate)
     router.get('/users/edit/:id',PageController.categoryEdit)
 
-    router.get('/roles',PageController.categories)
-    router.get('/roles/create',PageController.categoryCreate)
-    router.get('/roles/edit/:id',PageController.categoryEdit)
+    router.get('/roles',PageController.roles)
+    router.get('/roles/create',PageController.roleCreate)
+    router.get('/roles/edit/:id',PageController.roleEdit)
 
     router.get('/profile',PageController.categories)
     router.get('/settings',PageController.categories)

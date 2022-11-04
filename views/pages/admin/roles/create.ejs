@@ -1,0 +1,149 @@
+
+<div class="page-content">
+    <nav class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/roles/">Roles</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+    <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Add Role</h4>
+                        <p class="card-description">sum text</p>
+                        <form action="/api/roles/store" method="post" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="nameTm">Name (Tm)</label>
+                                    <input id="nameTm" name="nameTm" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nameRu">Name (Ru)</label>
+                                    <input id="nameRu" name="nameRu" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+									<label>Permissions</label>
+                                    <select class="select2 w-100" name="permissions" id="permissions"></select>
+								</div>
+                                <button class="btn btn-primary submitter" type="submit">
+                                    Save
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/image-uploader.min.js"></script>
+<script src="/assets/vendors/select2/select2.min.js"></script>
+
+<script>
+    let form={
+        nameRu:'',
+        nameTm:'',
+        permissions:[],
+    }
+    $(document).ready(function(){
+        onChange()
+        $('form').submit(function(e) {
+            $('.submitter').prop('disabled', true);
+            e.preventDefault()
+            $.ajax({
+                url      : $(this).attr('action'),
+                type     : $(this).attr("method"),
+                data     : form,
+                dataType : 'json',
+                success  : function (res)
+                {
+                    if (res.success) {
+                        Swal.fire(
+                            'Good job!',
+                            res.message,
+                            'success'
+                        )
+                        $('form').trigger("reset");
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                        })
+                    }
+                    $('form').trigger("reset");
+                    $('.submitter').prop('disabled', false);
+                },
+                error    : function (error)
+                {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'internal server error',
+                        })
+                    $('.submitter').prop('disabled', false);
+                }
+            });
+        });
+    });
+    const onChange =()=>{
+        Object.keys(form).forEach(key => {
+            $(`#${key}`).change( function(){
+                form[key]=$(this).val()
+            })
+        });
+    }
+</script>
+<script>
+    $(document).ready(function(){
+        getSelectData('permissions','permissions',{selectedIds:[0]})
+        $('#permissions').select2({
+            placeholder: 'Select categories',
+            minimumResultsForSearch: 1,
+            multiple: true,
+        })
+        $("#permissions").trigger("change");
+    })
+    const addOption=(array,id)=>{
+        array.forEach(element => {
+            $("#"+id)
+            .append($("<option></option>")
+            .attr("selected", element.selected )
+            .attr("value", element.id )
+            .text(element.name ));
+        });
+    }
+    const getSelectData=(name,id,search={},)=>{
+        const url=`/api/roles/permissions`
+        const page=1
+        const limit=10
+        $.ajax({
+            url      : url,
+            type     : 'post',
+            data     : {
+                search,
+                page,
+                limit
+            },
+            dataType : 'json',
+            success  : function (res) {
+                if (res.success) {
+                    addOption(res.data,id)
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                    })
+                }
+            },
+            error    : function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message,
+                })
+            }
+        });
+    }
+</script>

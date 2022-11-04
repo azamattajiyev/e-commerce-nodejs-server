@@ -1,4 +1,4 @@
-const {Brand,Category, Document, Product, Unit, User, Size, Color, Store,Location}=require("../../../models");
+const {Brand,Category, Document, Product, Unit, User, Size, Color, Store,Location,Role,Permission}=require("../../../models");
 const {attributes,excludes} =require("../../common.controller");
 const {Op} = require('sequelize');
 
@@ -333,6 +333,44 @@ class PageController {
     })
     if (data) {
       res.render('pages/admin/locations/edit', {
+        data:data,
+        layout:'./layouts/admin/admin',
+        extractScripts: true
+      })
+    } else {
+      res.render('pages/error/404', {
+        message:`Cannot find Location with id=${id}.`,
+      })
+    }
+  }
+  async roles(req, res, next) {
+    res.render('pages/admin/roles', {
+      layout:'./layouts/admin/admin',
+      extractScripts: true
+    })
+  }
+
+  async roleCreate(req, res, next) {
+    res.render('pages/admin/roles/create', {
+      layout:'./layouts/admin/admin',
+      extractScripts: true
+    })
+  }
+
+  async roleEdit(req, res, next) {
+    const id = req.params.id;
+    const data = await Role.findOne({
+      where:{id},
+      attributes:['id','name'],
+      include:[
+        {model: Permission,
+          as:'permissions',
+          attributes:['id']
+        },
+      ]
+    })
+    if (data) {
+      res.render('pages/admin/roles/edit', {
         data:data,
         layout:'./layouts/admin/admin',
         extractScripts: true

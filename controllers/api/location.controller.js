@@ -121,7 +121,6 @@ exports.update =async (req, res) => {
     let data =await Location.update(newLocation, {
       where: { id:id }
     })
-    console.log(data);
     res.status(200).json(successRes(null,"Location was updated successfully."));
   } catch (error) {
     console.log(error.message);

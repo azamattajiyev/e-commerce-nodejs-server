@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Brands</li>
+                <li class="breadcrumb-item active" aria-current="page">Roles</li>
             </ol>
         </nav>
         <div class="row">
@@ -10,8 +10,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Brands</h6>
-                            <input type="hidden" id="route" value="brand">
+                            <h6 class="card-title mb-0">Roles</h6>
+                            <input type="hidden" id="route" value="roles">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
@@ -27,8 +27,8 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <a class="btn btn-primary" href="/admin/brands/create">
-                                    Add brand
+                                <a class="btn btn-primary" href="/admin/roles/create">
+                                    Add Role
                                 </a>
                             </p>
                             <div style=" width: 8rem;">
@@ -45,39 +45,14 @@
                                         <th style="width:5%">
                                             #
                                         </th>
-                                        <!-- <th>
-                                            Images
-                                        </th> -->
                                         <th>
                                             name
-                                        </th>
-                                        <th>
-                                            description
-                                        </th>
-                                        <th>
-                                            address
-                                        </th>
-                                        <th>
-                                            active
                                         </th>
                                     </tr>
                                         <tr>
                                             <th></th>
                                             <th>
                                                 <input id="name" name="name" class="form-control" type="text">
-                                            </th>
-                                            <th>
-                                                <input id="description" name="description" class="form-control" type="text">
-                                            </th>
-                                            <th>
-                                                <input id="address" name="address" class="form-control" type="text">
-                                            </th>
-                                            <th>
-                                                <select class="select2" name="active" id="active">
-                                                    <option value="">both</option>
-                                                    <option value="1">true</option>
-                                                    <option value="0">false</option>
-                                                </select>
                                             </th>
                                             <th></th>
                                         </tr>
@@ -102,28 +77,17 @@
 </div>
 	<script src="/assets/vendors/select2/select2.min.js"></script>
     <script src="/assets/js/select2.js"></script>
-    <script src="/assets/vendors/owl.carousel/owl.carousel.min.js"></script>
-    <script src="/assets/js/carousel.js"></script>
     <script src="/assets/js/custom-page.js"></script>
     <script>
         const setDataTable=(item,i)=>{
-    let url= '/assets/images/placeholder.jpg'
-    if (item.documents[0]) {
-        url='/uploads'+item.documents[0].path
-    }
+            
     $('tbody').append(`<tr id="row_${i}" class="delete_${item.id}" data-id="${item.id}">
         <td >${i}</td>
         <td  title="${item.name}">
-            <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${item.name}">
             ${item.name}
         </td>
-        <td title="${item.description}" class="tr_lang"> ${item.description}</td>
-        <td title="${item.address}"> ${item.address}</td>
         <td>
-            ${activeBtn(item.active,item.id,i)}
-        </td>
-        <td>
-            <a href="/admin/brands/edit/${item.id}">
+            <a href="/admin/roles/edit/${item.id}">
                 <button type="button" class="btn btn-primary btn-icon">
                     <svg xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" viewBox="0 0 24 24"
@@ -160,46 +124,14 @@ const showData=(row)=>{
     $('#show').empty()
     if (found) {
         $('#show').append(`
-    <div class="card-body">
-        ${owlCarousel(found)}
-        <h5 class="card-title" >${found.name}</h5>
-        <p class="card-text">${found.description}</p>
-    </div>`)
-    $('.owl-animate-css').owlCarousel({
-            animateOut: 'slideOutDown',
-            animateIn: 'flipInX',
-            items:1,
-            margin:0,
-            stagePadding:0,
-            smartSpeed:450
-        });
+        <div class="card-body">
+            <h5 class="card-title" >${found.name}</h5>
+        </div>`)
     }
-}
-
-const owlCarousel=(item)=>{
-    let result='<div class="owl-carousel owl-theme owl-animate-css owl-loaded owl-drag">'
-    if (item.documents.length > 0) {
-        item.documents.forEach((el, index, array) => {
-            result+=`<div class="item">
-                <img src="/uploads${el.path}" alt="${index}-image">
-            </div>`
-            result+=`<div class="item">
-                <img src="/uploads${el.path}" alt="${index}-image">
-            </div>`
-        });
-    }else{
-        result+=`<div class="item">
-                <img src="/assets/images/placeholder.jpg" alt="item-image">
-        </div>`
-    }
-    result+='</div>'
-    return result
 }
 
 let searchForm={
     name:'',
-    description:'',
-    address:'',
 }
 var timer;
 const onChange =()=>{
@@ -217,17 +149,5 @@ const onChange =()=>{
             }, ms);
         })
     });
-    $(`#active`).change( function(){
-        searchForm['active']=$(this).val()
-        clearTimeout(timer);
-        var ms = 200; // milliseconds
-        timer = setTimeout(function() {
-            getData({
-            limit:10,
-            page:1,
-            search:searchForm
-        })
-        }, ms);
-    })
 }
     </script>

@@ -17,6 +17,6 @@ var router = express.Router();
     router.use('/products', product)
     router.use('/patterns', pattern)
     router.use('/users', user)
-    router.use('/roles', auth_m, roles)
+    router.use('/roles',  roles)//auth_m,
     router.use('/auth',auth)
 module.exports = router;
