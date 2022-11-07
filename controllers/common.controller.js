@@ -43,6 +43,7 @@ const attributes={
 }
 const excludes={
     time:[ 'createdAt','updatedAt'],
+    user:['password', 'userId', 'createdAt','updatedAt']
 }
 
 module.exports = {

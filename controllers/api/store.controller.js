@@ -91,7 +91,7 @@ exports.findAll = async(req, res) => {
         }
       }
     }
-    limit=parseInt(limit)
+    limit=limit ?parseInt(limit):10
     console.log(condition);
     const offset = page ? ((page-1)*limit) : 0;
     const data= await Store.findAndCountAll({

@@ -14,10 +14,11 @@ exports.findAll = async(req, res) => {
         }
       }
     }
+    limit=limit ?parseInt(limit):10
     const offset = page ? ((page-1)*limit) : 0;
     // console.log(offset);
     const data= await User.findAndCountAll({
-      limit:parseInt(limit),
+      limit,
       offset,
       where: condition,
       attributes: {

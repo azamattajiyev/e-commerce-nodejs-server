@@ -12,7 +12,7 @@ const auth = require("./auth");
 var router = express.Router();
     router.use('/categories', category)
     router.use('/locations', location)
-    router.use('/brands', brand)
+    router.use('/brands', auth_m, brand)
     router.use('/stores', store)
     router.use('/products', product)
     router.use('/patterns', pattern)

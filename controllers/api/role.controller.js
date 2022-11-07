@@ -16,10 +16,11 @@ class RoleController{
                 }
             }
         }
+        limit=limit ?parseInt(limit):10
         const offset = page ? ((page-1)*limit) : 0;
         // console.log(offset);
         const data= await Role.findAndCountAll({
-            limit:parseInt(limit),
+            limit,
             offset,
             where: condition,
             // attributes: {
@@ -37,13 +38,13 @@ class RoleController{
             let result=[]
             let {page,limit,search} = req.body
             console.log(page,limit,search);
-            if (myCache.has( "myPermission" )) {
-                result=myCache.get( "myPermission" )
-                if (search && search.selectedIds) {
-                    result= selecteditem(result,search.selectedIds)
-                }
-                return res.status(200).json(successRes(result));
-            }
+            // if (myCache.has( "myPermission" )) {
+            //     result=myCache.get( "myPermission" )
+            //     if (search && search.selectedIds) {
+            //         result= selecteditem(result,search.selectedIds)
+            //     }
+            //     return res.status(200).json(successRes(result));
+            // }
             const data= await Permission.findAndCountAll({
                 attributes:['id','name']
             })
@@ -51,7 +52,7 @@ class RoleController{
                 const el = data.rows[i];
                 result.push({id:el.id,name:el.name,selected:false})
             }
-            const success = myCache.set('myLocation',result)
+            // const success = myCache.set('myLocation',result)
             if (search && search.selectedIds) {
                 result= selecteditem(result,search.selectedIds)
             }
@@ -88,6 +89,7 @@ class RoleController{
             let data = await Role.create(newRole)
             if (data) {
                 await RoleHasPermission.savePermissions(data.dataValues.id,permissions)
+                myCache.del( `role_${data.dataValues.id}` )
             }
             res.status(200).json(successRes(data,`${data.name} atly role üstünlikli döredildi`));
         } catch (error) {
@@ -126,6 +128,7 @@ class RoleController{
             if (data) {
                 await RoleHasPermission.clearAllById(id)
                 await RoleHasPermission.savePermissions(id,permissions)
+                myCache.del( `role_${id}` )
             }
             res.status(200).json(successRes(null,"Role was updated successfully."));
         } catch (error) {
@@ -139,18 +142,17 @@ class RoleController{
             const id = req.params.id;
             const data = await Role.findByPk(id,{
                 attributes:['id','name'],
-                include:[
-                    {model}
-                ]
+                // include:[
+                //     {model}
+                // ]
             })
             if (data) {
-                data.dataValues.parends=await Location.getAllParents(data.dataValues.parentId)
                 res.status(200).json(successRes(data));
             } else {
-                res.status(200).json(errorRes(`Cannot find Location with id=${id}.`));
+                res.status(200).json(errorRes(`Cannot find Role with id=${id}.`));
             }
         } catch (error) {
-            res.status(200).json(errorRes("Error retrieving Location with id=" + id));
+            res.status(200).json(errorRes("Error retrieving Role with id=" + id));
         }
     }
 
@@ -162,6 +164,7 @@ class RoleController{
             })
             if (num == 1) {
                 await RoleHasPermission.clearAllById(id)
+                myCache.del( `role_${id}` )
                 res.status(200).json(successRes(null,"Role was deleted successfully!"));
             } else {
                 res.status(200).json(errorRes(`Cannot delete Role with id=${id}. Maybe Role was not found!`));
