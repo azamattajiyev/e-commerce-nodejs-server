@@ -49,10 +49,10 @@
                                             Images
                                         </th> -->
                                         <th>
-                                            name
+                                            <span class="tr_lang">name</span>
                                         </th>
                                         <th>
-                                            description
+                                            <span class="tr_lang">description</span>
                                         </th>
                                         <th>
                                             address
@@ -106,6 +106,7 @@
     <script src="/assets/js/carousel.js"></script>
     <script src="/assets/js/custom-page.js"></script>
     <script>
+
         const setDataTable=(item,i)=>{
     let url= '/assets/images/placeholder.jpg'
     if (item.documents[0]) {
@@ -113,12 +114,12 @@
     }
     $('tbody').append(`<tr id="row_${i}" class="delete_${item.id}" data-id="${item.id}">
         <td >${i}</td>
-        <td  title="${item.name}">
-            <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${item.name}">
-            ${item.name}
+        <td  title="${tr(item.name)}">
+            <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${tr(item.name)}">
+            ${tr(item.name)}
         </td>
-        <td title="${item.description}" class="tr_lang"> ${item.description}</td>
-        <td title="${item.address}"> ${item.address}</td>
+        <td title="${tr(item.description)}" > ${tr(item.description)}</td>
+        <td title="${tr(item.address)}"> ${tr(item.address)}</td>
         <td>
             ${activeBtn(item.active,item.id,i)}
         </td>
@@ -162,8 +163,8 @@ const showData=(row)=>{
         $('#show').append(`
     <div class="card-body">
         ${owlCarousel(found)}
-        <h5 class="card-title" >${found.name}</h5>
-        <p class="card-text">${found.description}</p>
+        <h5 class="card-title" >${tr(found.name)}</h5>
+        <p class="card-text">${tr(found.description)}</p>
     </div>`)
     $('.owl-animate-css').owlCarousel({
             animateOut: 'slideOutDown',

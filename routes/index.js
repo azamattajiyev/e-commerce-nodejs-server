@@ -5,5 +5,5 @@ const admin = require("./admin");
 var router = express.Router();
     router.use('/', web)
     router.use('/api', api)
-    router.use('/admin', admin)
+    router.use('/', admin)
 module.exports = router;

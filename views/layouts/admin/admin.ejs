@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="<%= lang %>">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,6 +53,12 @@
 
 	<!-- core:js -->
 	<script src="/assets/vendors/core/core.js"></script>
+	<script>
+        let lang=$('html').attr('lang')
+        const tr=(text)=>{
+            return JSON.parse(text)[lang]
+        }
+    </script>
 	<!-- endinject -->
 	<!-- plugin js for this page -->
 	<%- script %>
@@ -71,18 +77,14 @@
 	<!-- inject:js -->
 	<script src="/assets/vendors/feather-icons/feather.min.js"></script>
 	<script src="/assets/js/template.js"></script>
+	<script src="/assets/js/translate.js"></script>
 	<!-- endinject -->
 	<!-- custom js for this page -->
 	<script src="/assets/js/dashboard.js"></script>
 	<script src="/assets/js/datepicker.js"></script>
 	<!-- end custom js for this page -->
 	<script>
-		// $(document).ready(function(){
-		// 	console.log('hey')
-		//   let lang=$('html').attr('lang')
-		//   let json =$('.tr_lang').text()==''?$('.tr_lang').val():$('.tr_lang').text()
-		//   console.log(json,lang);
-		// })
-	  </script>
+		$()
+	</script>
 </body>
 </html>
