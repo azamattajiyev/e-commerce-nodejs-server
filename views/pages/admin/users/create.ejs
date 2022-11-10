@@ -12,30 +12,35 @@
                     <div class="card-body">
                         <h4 class="card-title"><span class="tr_lang">Add</span> <span class="tr_lang">user</span></h4>
                         <p class="card-description"><span class="tr_lang">some_text</span></p>
-                            <form action="/api/users/store" method="post" enctype="multipart/form-data">
+                        <form action="/api/users/store" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="name">Name</label>
+                                    <label for="name"><span class="tr_lang">Name</span></label>
                                     <input id="name" name="name" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Description (TM) (optional)</label>
-                                    <textarea id="descriptionTm"  name="descriptionTm" class="form-control" maxlength="100" rows="8"
-                                    placeholder="This textarea has a limit of 100 chars."></textarea>
+                                    <label for="username"><span class="tr_lang">username</span></label>
+                                    <input id="username" name="username" class="form-control" type="text"
+                                    placeholder="61234567">
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Description (RU) (optional)</label>
-                                    <textarea id="descriptionRu" name="descriptionRu" class="form-control" maxlength="100" rows="8"
-                                    placeholder="This textarea has a limit of 100 chars."></textarea>
+                                    <label for="password"><span class="tr_lang">password</span></label>
+                                    <input id="password" name="password" class="form-control" type="password">
                                 </div>
                                 <div class="form-group">
-                                    <label for="addressTm">Address (Tm)</label>
-                                    <input id="addressTm" class="form-control" type="text" name="addressTm">
+                                    <label for="password_confirm"><span class="tr_lang">password_confirm</span></label>
+                                    <input id="password_confirm" name="password_confirm" class="form-control" type="password">
                                 </div>
                                 <div class="form-group">
-                                    <label for="addressRu">Address (Ru)</label>
-                                    <input id="addressRu" class="form-control" type="text" name="addressRu">
-                                </div>
+									<label><span class="tr_lang">Email</span></label>
+                                    <input id="email" name="email" class="form-control" type="email">
+								</div>
+                                <div class="form-group">
+									<label><span class="tr_lang">Role</span></label>
+                                    <select class="select2 w-100" name="roleId" id="roleId">
+                                        <option value="---" selected disabled>Bosh</option>
+                                    </select>
+								</div>
                                 <div class="form-check form-check-flat form-check-primary">
                                     <label class="form-check-label">
                                         <input type="checkbox" id="active" name="active" checked class="form-check-input">
@@ -44,55 +49,51 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-field">
-                                        <label class="active">Photos</label>
+                                        <label class="active"><span class="tr_lang">Images</span></label>
                                         <div class="input-images-1" style="padding-top: .5rem;"></div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
-                            </form>
+                        </form>
                     </div>
                 </div>
             </div>
     </div>
 </div>
 <script type="text/javascript" src="/assets/js/image-uploader.min.js"></script>
+<script src="/assets/vendors/select2/select2.min.js"></script>
 
 <script>
-    $('input[type="file"]').on("change", function(){
-        alert(1)
-    })
     let form={
         name:'',
-        descriptionTm:'',
-        descriptionRu:'',
-        addressTm:'',
-        addressRu:'',
+        username:'',
+        email:'',
+        password:'',
+        password_confirm:'',
+        roleId:0,
         active:'on',
     }
     let files=[]
     $(document).ready(function(){
         onChange()
-        var toastMixin = Swal.mixin({
-            toast: true,
-            icon: 'success',
-            title: 'General Title',
-            animation: false,
-            position: 'top-right',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
         $('form').submit(function(e) {
             $('.submitter').prop('disabled', true);
             e.preventDefault()
             form.files=files
+            if (form.password!=form.password_confirm) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'password',
+                })
+                $('#password').css('border','1px solid red')
+                $('#password_confirm').css('border','1px solid red')
+                $('.submitter').prop('disabled', false);
+                return
+            }
             $.ajax({
                 url      : $(this).attr('action'),
                 type     : $(this).attr("method"),
@@ -100,8 +101,6 @@
                 dataType : 'json',
                 success  : function (res)
                 {
-                    // response = jQuery.parseJSON(response);
-                    console.log(res);
                     if (res.success) {
                         Swal.fire(
                             'Good job!',
@@ -125,19 +124,17 @@
                         icon: 'error',
                         title: 'Oops...',
                         text: 'internal server error',
-                        })
-
+                    })
                     $('.submitter').prop('disabled', false);
                 }
             });
         });
     });
-
     const onChange =()=>{
         $('.input-images-1').imageUploader({
             imagesInputName: 'photos',
             label:'drag_drop_files_here_or_click_to_browse',
-            multiple:false
+            multiple:true
         });
         $('.upload-text span').addClass('tr_lang')
         const toBase64 = file => new Promise((resolve, reject) => {
@@ -157,6 +154,74 @@
             $(`#${key}`).change( function(){
                 form[key]=$(this).val()
             })
+            if(key=='password'|| key=='password_confirm'){
+                $(`#${key}`).keydown( function(){
+                    $('#password').attr('style','')
+                    $('#password_confirm').attr('style','')
+                })
+            }
+        });
+        $('#active').change(function(){
+            if($(this).is(":checked")) {
+                //'checked' event code
+                form.active='on'
+                return;
+            }
+            form.active=null
+        })
+    }
+</script>
+<script>
+    //Role
+    $(document).ready(function(){
+        getSelectData('roles','roleId',{selectedIds:[0]})
+        $('#roleId').select2({
+            placeholder: 'Select Role',
+            minimumResultsForSearch: 1,
+            multiple: false,
+        })
+        $("#roleId").trigger("change");
+    })
+    const addOption=(array,id)=>{
+        array.forEach(element => {
+            $("#"+id)
+            .append($("<option></option>")
+            .attr("selected", element.selected )
+            .attr("value", element.id )
+            .text(tr(element.name) ));
+        });
+    }
+    const getSelectData=(name,id,search={},)=>{
+        const url=`/api/${name}/select2`
+        const page=1
+        const limit=10
+        $.ajax({
+            url      : url,
+            type     : 'post',
+            data     : {
+                search,
+                page,
+                limit
+            },
+            dataType : 'json',
+            success  : function (res) {
+                if (res.success) {
+                    addOption(res.data,id)
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.message,
+                    })
+                }
+            },
+            error    : function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message,
+                })
+            }
         });
     }
 </script>

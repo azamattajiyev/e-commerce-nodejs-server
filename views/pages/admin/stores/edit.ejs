@@ -314,7 +314,7 @@
             .append($("<option></option>")
             .attr("selected", element.selected )
             .attr("value", element.id )
-            .text(str+element.name ));
+            .text(str+tr(element.name) ));
         });
         $("#"+id).trigger("change");
     }

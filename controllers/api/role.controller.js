@@ -90,6 +90,7 @@ class RoleController{
             if (data) {
                 await RoleHasPermission.savePermissions(data.dataValues.id,permissions)
                 myCache.del( `role_${data.dataValues.id}` )
+                myCache.del('myRole')
             }
             res.status(200).json(successRes(data,`${data.name} atly role üstünlikli döredildi`));
         } catch (error) {
@@ -128,7 +129,8 @@ class RoleController{
             if (data) {
                 await RoleHasPermission.clearAllById(id)
                 await RoleHasPermission.savePermissions(id,permissions)
-                myCache.del( `role_${id}` )
+                myCache.del( `role_${id}`)
+                myCache.del('myRole')
             }
             res.status(200).json(successRes(null,"Role was updated successfully."));
         } catch (error) {
@@ -164,7 +166,8 @@ class RoleController{
             })
             if (num == 1) {
                 await RoleHasPermission.clearAllById(id)
-                myCache.del( `role_${id}` )
+                myCache.del( `role_${id}`)
+                myCache.del('myRole')
                 res.status(200).json(successRes(null,"Role was deleted successfully!"));
             } else {
                 res.status(200).json(errorRes(`Cannot delete Role with id=${id}. Maybe Role was not found!`));
@@ -173,6 +176,34 @@ class RoleController{
             res.status(200).json(errorRes( "Could not delete Role with id=" + id +" "+error.message));
         }
     }
+    async findAllselect2(req, res){
+        try{
+            let result=[]
+            let {page,limit,search} = req.body
+            console.log(page,limit,search);
+            if (myCache.has( "myRole" )) {
+                result=myCache.get( "myRole" )
+                if (search && search.selectedIds) {
+                    result= selecteditem(result,search.selectedIds)
+                }
+                return res.status(200).json(successRes(result));
+            }
+            const data= await Role.findAndCountAll({
+                attributes:['id','name']
+            })
+            for (let i = 0; i < data.count; i++) {
+                const el = data.rows[i];
+                    result.push({id:el.id,name:el.name,selected:false})
+                }
+            const success = myCache.set('myLocation',result)
+            if (search && search.selectedIds) {
+                result= selecteditem(result,search.selectedIds)
+            }
+            res.status(200).json(successRes(result));
+        } catch (error) {
+            res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Categories."));
+        }
+    };
 
 }
 

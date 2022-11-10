@@ -21,7 +21,7 @@ const addOption=(array,id)=>{
       .append($("<option></option>")
       .attr("selected", element.selected )
       .attr("value", element.id )
-      .text(str+element.name ));
+          .text(str + tr(element.name)));
   });
 }
 const getSelectData=(name,id,search={},)=>{

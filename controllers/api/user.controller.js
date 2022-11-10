@@ -1,6 +1,60 @@
 const {User, Document,Role}=require("../../models");
 const {paginateData,errorRes,successRes, selecteditem,} =require("../common.controller");
 const {Op} = require('sequelize');
+const bcrypt = require('bcryptjs');
+
+// Create and Save a new User
+exports.create =async (req, res) => {
+  try{
+    const {
+      name,
+      email,
+      password,
+      active,
+      roleId,
+      files,
+    } =req.body
+    let {username} = req.body;
+    // Validate request
+    console.log(req.body);
+    if (!name
+      || !username
+      || !password
+      || !roleId) {
+      res.json(errorRes('Content can not be empty!'));
+      return;
+    }
+    username = username.toLowerCase();
+    const user = await User.findOne({
+      where:{
+          username,
+      },
+      attributes: {
+        exclude:['userId']
+      },
+    });
+    if (user) return res.status(200).json(errorRes('Ulanyjy öňem bar'));
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // Create a User
+    const newUser = {
+      name,
+      username,
+      email,
+      password: hashedPassword,
+      roleId,
+      active: active ? 1 : 0,
+    };
+    // Save User in the database
+    let data = await User.create(newUser)
+    if (data && files) {
+      await Document.saveDocuments('User',data.dataValues.id,files)
+    }
+    res.status(200).json(successRes(data,`${data.name} atly User üstünlikli döredildi`));
+  } catch (error) {
+    console.log(error);
+    res.status(200).json(errorRes(error.message));
+  }
+};
 // Retrieve all Categories from the database.
 exports.findAll = async(req, res) => {
   try{
@@ -119,54 +173,45 @@ exports.update =async (req, res) => {
   try{
     const id = req.params.id;
     const {
-      nameTm,
-      nameRu,
-      descriptionTm,
-      descriptionRu,
-      parentId,
+      name,
+      email,
+      password,
       active,
-      order,
+      roleId,
+      files,
+      deleted,
     } =req.body
     // Validate request
     console.log(req.body);
-    if (
-      !nameRu
-      || !nameTm
-      || !descriptionTm
-      || !descriptionRu
-      || !order
-      ) {
+    if (!name || !roleId) {
       res.json(errorRes('Content can not be empty!'));
       return;
     }
     const newUser = {
-      name:JSON.stringify({
-        tm:nameTm,
-        ru:nameRu
-      }),
-      description:JSON.stringify({
-        tm:descriptionTm,
-        ru:descriptionRu
-      }),
-      parentId: parentId ? parentId : null,
-      order,
+      name,
+      email,
+      roleId,
       active: active ? 1 : 0,
     };
+    console.log(password);
+
+    if (password) {
+      newUser.password= await bcrypt.hash(password, 10);
+    }
     let data =await User.update(newUser, {
       where: { id:id }
     })
-    console.log(data);
     if (data==1) {
-      if (req.body.deleted) {
-        await Document.clearAllById('User',id,req.body.deleted)
+      if (deleted) {
+        await Document.clearAllById('User',id,deleted)
       }
-      if(req.body.files){
-        await Document.saveDocuments('User',id,req.body.files)
+      if(files){
+        await Document.saveDocuments('User',id,files)
       }
     }
     res.status(200).json(successRes(null,"User was updated successfully."));
   } catch (error) {
-    console.log(err.message);
+    console.log(error.message);
     res.status(200).json(errorRes(error.message));
   }
 };

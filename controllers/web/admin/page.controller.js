@@ -445,6 +445,7 @@ class PageController {
   }
 
   async userCreate(req, res, next) {
+    const lang = req.params.lang;
     res.render('pages/admin/users/create', {
       lang,
       layout:'./layouts/admin/admin',
@@ -457,14 +458,28 @@ class PageController {
     const id = req.params.id;
     const data = await User.findOne({
       where:{id},
-      attributes:['id','name'],
-      // include:[
-      //   {model: Permission,
-      //     as:'permissions',
-      //     attributes:['id']
-      //   },
-      // ]
+      attributes: {
+        exclude: ['createdAt','updatedAt','userId','password']
+      },
+      include:[
+        {
+          model:Store,as:'stores',
+          attributes: {
+            exclude: ['createdAt','updatedAt','storeId']
+          },
+          through:{
+            attributes: [],
+          }
+        },
+        {model: Document, as: 'documents',
+        on: {
+          modelName: 'User',
+          modelId:{[Op.col]: 'User.id'}
+        }
+      },
+      ]
     })
+    console.log(data);
     if (data) {
       res.render('pages/admin/users/edit', {
         data,
