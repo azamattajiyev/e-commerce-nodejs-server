@@ -2,38 +2,38 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/brands/">Brands</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/brands/"><span class="tr_lang">Brands</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Edit</span></li>
         </ol>
     </nav>
     <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Edit Brand</h4>
-                        <p class="card-description">sum text</p>
+                        <h4 class="card-title"><span class="tr_lang">Edit</span> <span class="tr_lang">brand</span></h4>
+                        <p class="card-description"><span class="tr_lang">some_text</span></p>
                             <form action="/api/brands/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="name">Name</label>
+                                    <label for="name"><span class="tr_lang">Name</span></label>
                                     <input id="name" name="name" value="<%= JSON.parse(data.name).tm %>" class="form-control tr_lang" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Description (TM) (optional)</label>
+                                    <label for="email"><span class="tr_lang">Description</span> (TM)</label>
                                     <textarea id="descriptionTm"  name="descriptionTm" class="form-control" maxlength="100" rows="8"
                                     placeholder="This textarea has a limit of 100 chars."><%= JSON.parse(data.description).tm %></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Description (RU) (optional)</label>
+                                    <label for="email"><span class="tr_lang">Description</span> (RU)</label>
                                     <textarea id="descriptionRu" name="descriptionRu" class="form-control" maxlength="100" rows="8"
                                     placeholder="This textarea has a limit of 100 chars."><%= JSON.parse(data.description).ru %></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="address">Address (Tm)</label>
+                                    <label for="address"><span class="tr_lang">Address</span> (Tm)</label>
                                     <input id="addressTm" class="form-control"value="<%= JSON.parse(data.address).tm %>" type="text" name="addressTm">
                                 </div>
                                 <div class="form-group">
-                                    <label for="address">Address (Ru)</label>
+                                    <label for="address"><span class="tr_lang">Address</span> (Ru)</label>
                                     <input id="addressRu" class="form-control" type="text" value="<%= JSON.parse(data.address).ru %>" name="addressRu">
                                 </div>
                                 <div class="form-check form-check-flat form-check-primary">
@@ -44,12 +44,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-field">
-                                        <label class="active">Photos</label>
+                                        <label class="active"><span class="tr_lang">Images</span></label>
                                         <div class="input-images-1" style="padding-top: .5rem;"></div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                         </form>
@@ -94,7 +94,9 @@
             preloaded:await getImages(JSON.parse('<%- JSON.stringify(data.documents) %>') ),
             imagesInputName: 'photos',
             multiple:false,
+            label:'drag_drop_files_here_or_click_to_browse'
         });
+        $('.upload-text span').addClass('tr_lang')
 
         $('input[name="photos[]"]').change(async function(){
             files=[]

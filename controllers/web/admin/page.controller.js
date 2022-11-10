@@ -37,31 +37,33 @@ class PageController {
   async brandEdit(req, res, next) {
     const lang = req.params.lang;
     const id = req.params.id;
-      const data =await Brand.findOne({
-        where:{id},
-        include:[
-          {model: Document, as: 'documents',
-          on: {
-            modelName: 'brand',
-            modelId:{[Op.col]: 'brand.id'}
-          }
-        },
-        ]
+    const data =await Brand.findOne({
+      where:{id},
+      include:[
+        {model: Document, as: 'documents',
+        on: {
+          modelName: 'Brand',
+          modelId:{[Op.col]: 'Brand.id'}
+        }
+      },
+      ]
+    })
+    console.log(lang,id);
+    if (data) {
+      console.log(data);
+      return res.render('pages/admin/brands/edit', {
+        lang,
+        data,
+        layout:'./layouts/admin/admin',
+        extractScripts: true
       })
-      
-      if (data) {
-        res.render('pages/admin/brands/edit', {
-          lang,
-          data:data,
-          layout:'./layouts/admin/admin',
-          extractScripts: true
-        })
-      } else {
-        res.render('pages/error/404', {
-          lang,
-          message:`Cannot find Brand with id=${id}.`,
-        })
-      }
+
+    } else {
+      return res.render('pages/error/404', {
+        lang,
+        message:`Cannot find Brand with id=${id}.`,
+      })
+    }
   }
 
   async categories(req, res, next) {
@@ -79,7 +81,7 @@ class PageController {
       where:{parentId:null},
     })
     res.render('pages/admin/categories/create', {
-      data:data,
+      data,
       lang,
       layout:'./layouts/admin/admin',
       extractScripts: true
@@ -97,15 +99,15 @@ class PageController {
         include:[
           {model: Document, as: 'documents',
           on: {
-            modelName: 'category',
-            modelId:{[Op.col]: 'category.id'}
+            modelName: 'Category',
+            modelId:{[Op.col]: 'Category.id'}
           }
         },
         ]
       })
       if (data) {
         res.render('pages/admin/categories/edit', {
-          data:data,
+          data,
           lang,
           categories:categories,
           layout:'./layouts/admin/admin',
@@ -153,8 +155,8 @@ class PageController {
       include:[
         {model: Document, as: 'documents',
           on: {
-            modelName: 'product',
-            modelId:{[Op.col]: 'product.id'}
+            modelName: 'Product',
+            modelId:{[Op.col]: 'Product.id'}
           }
         },
         {
@@ -193,8 +195,8 @@ class PageController {
             },
             {model: Document, as: 'documents',
               on: {
-                modelName: 'product',
-                modelId:{[Op.col]: 'product.parentId'}
+                modelName: 'Product',
+                modelId:{[Op.col]: 'Product.parentId'}
               }
             },
           ]
@@ -205,7 +207,7 @@ class PageController {
     if (data) {
       res.render('pages/admin/products/edit', {
         lang,
-        data:data,
+        data,
         units:units,
         colors:colors,
         sizes:sizes,
@@ -234,7 +236,7 @@ class PageController {
     // })
     const lang = req.params.lang;
     res.render('pages/admin/patterns/create', {
-      // data:data,
+      // data,
       lang,
       layout:'./layouts/admin/admin',
       extractScripts: true
@@ -248,8 +250,8 @@ class PageController {
       include:[
         {model: Document, as: 'documents',
         on: {
-          modelName: 'product',
-          modelId:{[Op.col]: 'product.id'}
+          modelName: 'Product',
+          modelId:{[Op.col]: 'Product.id'}
         }
       },
       ]
@@ -257,7 +259,7 @@ class PageController {
     if (data) {
       res.render('pages/admin/patterns/edit', {
         lang,
-        data:data,
+        data,
         layout:'./layouts/admin/admin',
         extractScripts: true
       })
@@ -281,7 +283,7 @@ class PageController {
     // const data =await Store.
     const lang = req.params.lang;
     res.render('pages/admin/stores/create', {
-      // data:data,
+      // data,
       lang,
       layout:'./layouts/admin/admin',
       extractScripts: true
@@ -330,7 +332,7 @@ class PageController {
       if (data) {
         res.render('pages/admin/stores/edit', {
           lang,
-          data:data,
+          data,
           layout:'./layouts/admin/admin',
           extractScripts: true
         })
@@ -376,7 +378,7 @@ class PageController {
     if (data) {
       res.render('pages/admin/locations/edit', {
         lang,
-        data:data,
+        data,
         layout:'./layouts/admin/admin',
         extractScripts: true
       })
@@ -421,7 +423,7 @@ class PageController {
     if (data) {
       res.render('pages/admin/roles/edit', {
         lang,
-        data:data,
+        data,
         layout:'./layouts/admin/admin',
         extractScripts: true
       })
@@ -436,17 +438,19 @@ class PageController {
   async users(req, res, next) {
     const lang = req.params.lang;
     res.render('pages/admin/users', {
+      lang,
       layout:'./layouts/admin/admin',
       extractScripts: true
     })
   }
 
-  // async userCreate(req, res, next) {
-  //   res.render('pages/admin/users/create', {
-  //     layout:'./layouts/admin/admin',
-  //     extractScripts: true
-  //   })
-  // }
+  async userCreate(req, res, next) {
+    res.render('pages/admin/users/create', {
+      lang,
+      layout:'./layouts/admin/admin',
+      extractScripts: true
+    })
+  }
 
   async userEdit(req, res, next) {
     const lang = req.params.lang;
@@ -463,7 +467,7 @@ class PageController {
     })
     if (data) {
       res.render('pages/admin/users/edit', {
-        data:data,
+        data,
         lang,
         layout:'./layouts/admin/admin',
         extractScripts: true

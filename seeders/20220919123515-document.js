@@ -6,7 +6,7 @@ module.exports = {
       {
         modelName: 'User',
         modelId: 1,
-        path: 'user/1.jpeg',
+        path: '/User/1.jpeg',
         type: 'image',
         order: 1,
         createdAt: new Date(),
@@ -15,7 +15,7 @@ module.exports = {
       {
         modelName: 'User',
         modelId: 2,
-        path: 'user/2.jpeg',
+        path: '/User/2.jpeg',
         type: 'image',
         order: 1,
         createdAt: new Date(),
@@ -23,8 +23,8 @@ module.exports = {
       },
       {
         modelName: 'User',
-        modelId: 2,
-        path: 'user/2.jpeg',
+        modelId: 3,
+        path: '/User/3.jpeg',
         type: 'image',
         order: 1,
         createdAt: new Date(),

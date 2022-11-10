@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Users</li>
+                <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Users</span></li>
             </ol>
         </nav>
         <div class="row">
@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Users</h6>
+                            <h6 class="card-title mb-0"><span class="tr_lang">Users</span></h6>
                             <input type="hidden" id="route" value="users">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,9 +27,9 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <!-- <a class="btn btn-primary" href="/admin/users/create">
-                                    Add User
-                                </a> -->
+                                <a class="btn btn-primary" href="/<%= lang %>/admin/users/create">
+                                    <span class="tr_lang">Add</span> <span class="tr_lang">user</span>
+                                </a>
                             </p>
                             <div style=" width: 8rem;">
                                 <select class="select2" id="tbl_limit"name="limit">
@@ -49,19 +49,19 @@
                                             Images
                                         </th> -->
                                         <th>
-                                            name
+                                            <span class="tr_lang">name</span>
                                         </th>
                                         <th>
-                                            username
+                                            <span class="tr_lang">username</span>
                                         </th>
                                         <th>
-                                            email
+                                            <span class="tr_lang">Email</span>
                                         </th>
                                         <th>
-                                            role
+                                            <span class="tr_lang">role</span>
                                         </th>
                                         <th>
-                                            active
+                                            <span class="tr_lang">active</span>
                                         </th>
                                     </tr>
                                         <tr>
@@ -125,12 +125,12 @@
         </td>
         <td title="${item.username}" class="tr_lang"> ${item.username}</td>
         <td title="${item.email}"> ${item.email}</td>
-        <td title="${item.role.name}"> ${item.role.name}</td>
+        <td title="${tr(item.role.name)}"> ${tr(item.role.name)}</td>
         <td>
             ${activeBtn(item.active,item.id,i)}
         </td>
         <td>
-            <a href="/admin/Users/edit/${item.id}">
+            <a href="/<%= lang %>/admin/users/edit/${item.id}">
                 <button type="button" class="btn btn-primary btn-icon">
                     <svg xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" viewBox="0 0 24 24"
@@ -170,7 +170,7 @@ const showData=(row)=>{
     <div class="card-body">
         ${owlCarousel(found)}
         <h5 class="card-title" >${found.name}</h5>
-        <p class="card-text">${found.description}</p>
+        <p class="card-text">${found.username}</p>
     </div>`)
     $('.owl-animate-css').owlCarousel({
             animateOut: 'slideOutDown',

@@ -10,12 +10,11 @@ class PageController {
   }
 
   async index(req, res, next) {
-    res.redirect('/admin/dashboard')
-    // res.render('pages/frontend/welcom', {
-    //   active_page:'dashboard',
-    //   layout:'./layouts/admin/admin',
-    //   extractScripts: true
-    // })
+    const lang = req.params.lang;
+    res.redirect(`/${lang}/admin/dashboard`)
+  }
+  async indexlang(req, res, next) {
+    res.redirect('/tm/')
   }
 
 }

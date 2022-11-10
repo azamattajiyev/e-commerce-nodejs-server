@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Products</li>
+                <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Products</span></li>
             </ol>
         </nav>
         <div class="row">
@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Products</h6>
+                            <h6 class="card-title mb-0"><span class="tr_lang">Products</span></h6>
                             <input type="hidden" id="route" value="products">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,8 +27,8 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <a class="btn btn-primary" href="/admin/products/create">
-                                    Add Product
+                                <a class="btn btn-primary" href="/<%= lang %>/admin/products/create">
+                                    <span class="tr_lang">Add</span> <span class="tr_lang">product</span>
                                 </a>
                             </p>
                             <div style=" width: 8rem;">
@@ -49,19 +49,19 @@
                                             Images
                                         </th> -->
                                         <th>
-                                            name
+                                            <span class="tr_lang">name</span>
                                         </th>
                                         <th>
-                                            description
+                                            <span class="tr_lang">description</span>
                                         </th>
                                         <th>
-                                            brand
+                                            <span class="tr_lang">brand</span>
                                         </th>
                                         <th>
-                                            category
+                                            <span class="tr_lang">category</span>
                                         </th>
                                         <th>
-                                            active
+                                            <span class="tr_lang">active</span>
                                         </th>
                                     </tr>
                                         <tr>
@@ -119,18 +119,18 @@
         }
         $('tbody').append(`<tr id="row_${i}" class="delete_${item.id}" data-id="${item.id}">
             <td >${i}</td>
-            <td  title="${item.parent.name}">
-                <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${item.parent.name}">
-                ${item.parent.name}
+            <td  title="${tr(item.parent.name)}">
+                <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${tr(item.parent.name)}">
+                ${tr(item.parent.name)}
             </td>
-            <td title="${item.parent.description}" class="tr_lang"> ${item.parent.description}</td>
-            <td title="${item.parent.brand.name}"> ${item.parent.brand.name}</td>
-            <td title="${item.parent.cat.name}"> ${item.parent.cat.name}</td>
+            <td title="${tr(item.parent.description)}" class="tr_lang"> ${tr(item.parent.description)}</td>
+            <td title="${tr(item.parent.brand.name)}"> ${tr(item.parent.brand.name)}</td>
+            <td title="${tr(item.parent.cat.name)}"> ${tr(item.parent.cat.name)}</td>
             <td>
                 ${activeBtn(item.active,item.id,i)}
             </td>
             <td>
-                <a href="/admin/products/edit/${item.id}">
+                <a href="/<%=lang%>/admin/products/edit/${item.id}">
                     <button type="button" class="btn btn-primary btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg"
                         width="24" height="24" viewBox="0 0 24 24"
@@ -169,8 +169,8 @@
             $('#show').append(`
         <div class="card-body">
             ${owlCarousel(found)}
-            <h5 class="card-title" >${found.parent.name}</h5>
-            <p class="card-text">${found.parent.description}</p>
+            <h5 class="card-title" >${tr(found.parent.name)}</h5>
+            <p class="card-text">${tr(found.parent.description)}</p>
         </div>`)
         $('.owl-animate-css').owlCarousel({
                 animateOut: 'slideOutDown',

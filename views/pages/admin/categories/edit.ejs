@@ -2,49 +2,49 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/categories/">categories</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/categories/"><span class="tr_lang">Categories</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Edit</span></li>
         </ol>
     </nav>
     <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Edit category</h4>
-                        <p class="card-description">sum text</p>
+                        <h4 class="card-title"><span class="tr_lang">Edit</span> <span class="tr_lang">category</span></h4>
+                        <p class="card-description"><span class="tr_lang">some_text</span></p>
                             <form action="/api/categories/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="nameTm">Name (TM)</label>
+                                    <label for="nameTm"><span class="tr_lang">Name</span> (TM)</label>
                                     <input id="nameTm" name="nameTm" value="<%= JSON.parse(data.name).tm %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nameRu">Name (RU)</label>
+                                    <label for="nameRu"><span class="tr_lang">Name</span> (RU)</label>
                                     <input id="nameRu" name="nameRu" value="<%= JSON.parse(data.name).ru %>" class="form-control" type="text">
                                 </div>
-                               <div class="form-group">
-                                    <label for="email">Description (TM) (optional)</label>
+                                <div class="form-group">
+                                    <label for="email"><span class="tr_lang">Description</span> (TM)</label>
                                     <textarea id="descriptionTm"  name="descriptionTm" class="form-control" maxlength="100" rows="8"
                                     placeholder="This textarea has a limit of 100 chars."><%= JSON.parse(data.description).tm %></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Description (RU) (optional)</label>
+                                    <label for="email"><span class="tr_lang">Description</span> (RU)</label>
                                     <textarea id="descriptionRu" name="descriptionRu" class="form-control" maxlength="100" rows="8"
                                     placeholder="This textarea has a limit of 100 chars."><%= JSON.parse(data.description).ru %></textarea>
                                 </div>
                                 <div class="form-group">
-									<label>Parent</label>
+									<label><span class="tr_lang">Parent</span></label>
 									<select class="select2 w-100" name="parentId" id="parentId">
 										<option value="">Parent not</option>
                                         <% categories.forEach(element => { %>
                                             <option value="<%=element.id%>"<% if (element.id==data.parentId) { %>
                                             selected
-                                            <% } %>><%=element.name%></option>
+                                            <% } %>><%= JSON.parse(element.name)[lang]%></option>
                                         <% }) %>
 									</select>
 								</div>
                                 <div class="form-group">
-                                    <label for="order">order </label>
+                                    <label for="order"><span class="tr_lang">Order</span></label>
                                     <input id="order" class="form-control"value="<%= data.order %>" type="text" name="order">
                                 </div>
                                 <div class="form-check form-check-flat form-check-primary">
@@ -55,12 +55,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-field">
-                                        <label class="active">Photos</label>
+                                        <label class="active"><span class="tr_lang">Images</span></label>
                                         <div class="input-images-1" style="padding-top: .5rem;"></div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                         </form>
@@ -106,9 +106,11 @@
         $('.input-images-1').imageUploader({
             preloaded:await getImages(JSON.parse('<%- JSON.stringify(data.documents) %>') ),
             imagesInputName: 'photos',
+            label:'drag_drop_files_here_or_click_to_browse',
             multiple:false,
         });
 
+        $('.upload-text span').addClass('tr_lang')
         $('input[name="photos[]"]').change(async function(){
             files=[]
             await $.each($(this)[0].files,async function(i, file) {

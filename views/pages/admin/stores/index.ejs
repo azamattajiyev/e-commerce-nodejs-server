@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Stores</li>
+                <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Stores</span></li>
             </ol>
         </nav>
         <div class="row">
@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Stores</h6>
+                            <h6 class="card-title mb-0"><span class="tr_lang">Stores</span></h6>
                             <input type="hidden" id="route" value="stores">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,8 +27,8 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <a class="btn btn-primary" href="/admin/stores/create">
-                                    Add Store
+                                <a class="btn btn-primary" href="/<%= lang %>/admin/stores/create">
+                                    <span class="tr_lang">Add</span> <span class="tr_lang">store</span>
                                 </a>
                             </p>
                             <div style=" width: 8rem;">
@@ -46,16 +46,16 @@
                                             #
                                         </th>
                                         <th>
-                                            name
+                                            <span class="tr_lang">name</span>
                                         </th>
                                         <th>
-                                            tel
+                                            <span class="tr_lang">tel</span>
                                         </th>
                                         <th>
-                                            location
+                                            <span class="tr_lang">location</span>
                                         </th>
                                         <th>
-                                            active
+                                            <span class="tr_lang">active</span>
                                         </th>
                                     </tr>
                                         <tr>
@@ -111,21 +111,21 @@
         }
         $('tbody').append(`<tr id="row_${i}" class="delete_${item.id}" data-id="${item.id}">
             <td >${i}</td>
-            <td  title="${item.name}">
-                <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${item.name}">
-                ${item.name}
+            <td  title="${tr(item.name)}">
+                <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${tr(item.name)}">
+                ${tr(item.name)}
             </td>
             <td  title="${item.phoneNumbers}">
                 ${item.phoneNumbers}
             </td>
-            <td  title="${item.location.name}">
-                ${item.location.name}
+            <td  title="${tr(item.location.name)}">
+                ${tr(item.location.name)}
             </td>
             <td>
                 ${activeBtn(item.active,item.id,i)}
             </td>
             <td>
-                <a href="/admin/stores/edit/${item.id}">
+                <a href="/<%= lang %>/admin/stores/edit/${item.id}">
                     <button type="button" class="btn btn-primary btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg"
                         width="24" height="24" viewBox="0 0 24 24"
@@ -164,8 +164,8 @@
             $('#show').append(`
         <div class="card-body">
             ${owlCarousel(found)}
-            <h5 class="card-title" >${found.name}</h5>
-            <p class="card-text">${found.description}</p>
+            <h5 class="card-title" >${tr(found.name)}</h5>
+            <p class="card-text">${tr(found.description)}</p>
         </div>`)
         $('.owl-animate-css').owlCarousel({
                 animateOut: 'slideOutDown',

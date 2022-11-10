@@ -2,45 +2,45 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/stores/">Stores</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/stores/"><span class="tr_lang">Stores</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Edit</span></li>
         </ol>
     </nav>
     <div class="row">
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Store</h4>
-                    <p class="card-description">sum text</p>
+                    <h4 class="card-title"><span class="tr_lang">Edit</span> <span class="tr_lang">store</span></h4>
+                    <p class="card-description"><span class="tr_lang">some_text</span></p>
                         <form action="/api/stores/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="nameTm">Name (Tm)</label>
+                                    <label for="nameTm"><span class="tr_lang">Name</span> (Tm)</label>
                                     <input id="nameTm" name="nameTm"value="<%= JSON.parse(data.name).tm %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nameRu">Name (Ru)</label>
+                                    <label for="nameRu"><span class="tr_lang">Name</span> (Ru)</label>
                                     <input id="nameRu" name="nameRu"value="<%= JSON.parse(data.name).ru %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="phoneNumbers">Phone Numbers (1,2,...)</label>
+                                    <label for="phoneNumbers"><span class="tr_lang">phone_numbers</span> (1,2,...)</label>
                                     <input id="phoneNumbers" name="phoneNumbers" class="form-control" type="text"
                                     placeholder="99361234567,99362345678,..." value="<%= data.phoneNumbers %>">
                                 </div>
                                 <div class="form-group">
-									<label>Email</label>
+									<label><span class="tr_lang">Email</span></label>
                                     <input id="email" name="email" class="form-control" value="<%= data.email %>"type="email">
 								</div>
                                 <div class="form-group">
-									<label>Location</label>
+									<label><span class="tr_lang">Location</span></label>
                                     <select class="select2 w-100" name="locId" id="locId"></select>
 								</div>
                                 <div class="form-group">
-									<label>Category</label>
+									<label><span class="tr_lang">Category</span></label>
                                     <select class="select2 w-100" name="categories" id="categories"></select>
 								</div>
                                 <div class="form-group">
-									<label>Owner</label>
+									<label><span class="tr_lang">Owner</span>Owner</label>
                                     <select class="select2 w-100" name="ownerIds[]" id="ownerIds">
                                         <% data.owners.forEach(element => { %>
                                             <option value="<%= element.id%>" selected="selected"><%= element.name %></option>
@@ -48,27 +48,27 @@
                                     </select>
 								</div>
                                 <div class="form-group">
-									<label>Address (Tm)</label>
+									<label><span class="tr_lang">Address</span> (Tm)</label>
                                     <input id="addressTm" name="addressTm"value="<%= JSON.parse(data.address).tm %>" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>Address (Ru)</label>
+									<label><span class="tr_lang">Address</span> (Ru)</label>
                                     <input id="addressRu" name="addressRu"value="<%= JSON.parse(data.address).ru %>" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>delivery_price</label>
+									<label><span class="tr_lang">delivery_price</span></label>
                                     <input id="delivery_price" name="delivery_price"value="<%= data.delivery_price %>" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>delivery_price_ex</label>
+									<label><span class="tr_lang">delivery_price_ex</span></label>
                                     <input id="delivery_price_ex" name="delivery_price_ex"value="<%= data.delivery_price_ex %>" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>delivery_free</label>
+									<label><span class="tr_lang">delivery_free</span></label>
                                     <input id="delivery_free"value="<%= data.delivery_free %>" name="delivery_free" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>Order</label>
+									<label><span class="tr_lang">Order</span></label>
                                     <input id="order" name="order" value="<%= data.order %>"class="form-control" type="number">
 								</div>
                                 <div class="form-check form-check-flat form-check-primary">
@@ -79,12 +79,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-field">
-                                        <label class="active">Photos</label>
+                                        <label class="active"><span class="tr_lang">Images</span></label>
                                         <div class="input-images-1" style="padding-top: .5rem;"></div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                     </form>
@@ -140,9 +140,11 @@
         $('.input-images-1').imageUploader({
             preloaded:await getImages(JSON.parse('<%- JSON.stringify(data.documents) %>') ),
             imagesInputName: 'photos',
+            label:'drag_drop_files_here_or_click_to_browse',
             multiple:false,
         });
 
+        $('.upload-text span').addClass('tr_lang')
         $('input[name="photos[]"]').change(async function(){
             files=[]
             await $.each($(this)[0].files,async function(i, file) {

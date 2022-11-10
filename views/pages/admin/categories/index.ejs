@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Categories</span></li>
             </ol>
         </nav>
         <div class="row">
@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Categories</h6>
+                            <h6 class="card-title mb-0"><span class="tr_lang">Categories</span></h6>
                             <input type="hidden" id="route" value="categories">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,8 +27,8 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <a class="btn btn-primary" href="/admin/categories/create">
-                                    Add category
+                                <a class="btn btn-primary" href="/<%= lang %>/admin/categories/create">
+                                    <span class="tr_lang">Add</span> <span class="tr_lang">category</span>
                                 </a>
                             </p>
                             <div style=" width: 8rem;">
@@ -49,19 +49,16 @@
                                             Images
                                         </th> -->
                                         <th>
-                                            name
+                                            <span class="tr_lang">name</span>
                                         </th>
                                         <th>
-                                            description
+                                            <span class="tr_lang">description</span>
                                         </th>
                                         <th>
-                                            parent
+                                            <span class="tr_lang">parent</span>
                                         </th>
                                         <th>
-                                            children
-                                        </th>
-                                        <th>
-                                            active
+                                            <span class="tr_lang">active</span>
                                         </th>
                                     </tr>
                                         <tr>
@@ -75,10 +72,6 @@
                                             <th>
                                                 <input id="parent" name="parent" class="form-control" type="text">
                                             </th>
-                                            <th>
-                                                <input id="children" name="children" class="form-control" type="text">
-                                            </th>
-                                            
                                             <th>
                                                 <select class="select2" name="active" id="active">
                                                     <option value="">both</option>
@@ -111,7 +104,7 @@
     <script src="/assets/js/select2.js"></script>
     <script src="/assets/vendors/owl.carousel/owl.carousel.min.js"></script>
     <script src="/assets/js/carousel.js"></script>
-    <script src="/assets/js/custom-page.js"></script>
+    <script src="/assets/js/custom-page.js"></script> 
     <script>
         const setDataTable=(item,i)=>{
     let url= '/assets/images/placeholder.jpg'
@@ -120,18 +113,17 @@
     }
     $('tbody').append(`<tr id="row_${i}" class="delete_${item.id}" data-id="${item.id}">
         <td >${i}</td>
-        <td  title="${item.name}">
-            <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${item.name}">
-            ${item.name}
+        <td  title="${tr(item.name)}">
+            <img src="${url}" class="align-self-center wd-100p wd-sm-150 mb-3 mb-sm-0 mr-3" alt="${tr(item.name)}">
+            ${tr(item.name)}
         </td>
-        <td title="${item.description}" class="tr_lang"> ${item.description}</td>
-        <td title="${item.parent!=null?item.parent.name:null}"> ${item.parent!=null?item.parent.name:null}</td>
-        <td title="${item.children.length}"> ${item.children.length}</td>
+        <td title="${tr(item.description)}" class="tr_lang"> ${tr(item.description)}</td>
+        <td title="${tr(item.parent!=null?item.parent.name:null)}"> ${tr(item.parent!=null?item.parent.name:null)}</td>
         <td>
             ${activeBtn(item.active,item.id,i)}
         </td>
         <td>
-            <a href="/admin/categories/edit/${item.id}">
+            <a href="/<%= lang %>/admin/categories/edit/${item.id}">
                 <button type="button" class="btn btn-primary btn-icon">
                     <svg xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" viewBox="0 0 24 24"
@@ -170,9 +162,9 @@ const showData=(row)=>{
         $('#show').append(`
     <div class="card-body">
         ${owlCarousel(found)}
-        <h5 class="card-title" >${found.name}</h5>
-        <p class="card-text">${found.description}</p>
-        <p class="card-text">${found.parent!=null?found.parent.name:null}</p>
+        <h5 class="card-title" >${tr(found.name)}</h5>
+        <p class="card-text">${tr(found.description)}</p>
+        <p class="card-text">${tr(found.parent!=null?found.parent.name:null)}</p>
         <p class="card-text">children:</p>
         ${childrenU(found.children)}
     </div>`)
@@ -190,7 +182,7 @@ const showData=(row)=>{
 const childrenU=(array)=>{
     let result ='<ul class="list-group">'
     array.forEach(element => {
-        result +=`<li class="list-group-item">${element.name}</li>`
+        result +=`<li class="list-group-item">${tr(element.name)}</li>`
     });
     result +='</ul>'
     return result

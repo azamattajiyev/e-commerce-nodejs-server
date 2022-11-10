@@ -2,17 +2,17 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/brands/">Brands</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/users/"><span class="tr_lang">Users</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Create</span></li>
         </ol>
     </nav>
     <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add Brand</h4>
-                        <p class="card-description">sum text</p>
-                            <form action="/api/brands/store" method="post" enctype="multipart/form-data">
+                        <h4 class="card-title"><span class="tr_lang">Add</span> <span class="tr_lang">user</span></h4>
+                        <p class="card-description"><span class="tr_lang">some_text</span></p>
+                            <form action="/api/users/store" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -136,8 +136,10 @@
     const onChange =()=>{
         $('.input-images-1').imageUploader({
             imagesInputName: 'photos',
+            label:'drag_drop_files_here_or_click_to_browse',
             multiple:false
         });
+        $('.upload-text span').addClass('tr_lang')
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);

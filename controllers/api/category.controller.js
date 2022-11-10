@@ -81,12 +81,12 @@ exports.findAll = async(req, res) => {
             exclude: [ 'createdAt','updatedAt']
           },
         },
-        {model: Category,
-          as:'children',
-          attributes: {
-            exclude: [ 'createdAt','updatedAt']
-          },
-        },
+        // {model: Category,
+        //   as:'children',
+        //   attributes: {
+        //     exclude: [ 'createdAt','updatedAt']
+        //   },
+        // },
         {model: Document, as: 'documents',
           on: {
             modelName: 'Category',

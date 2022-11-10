@@ -2,49 +2,49 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/products/">Products</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/products/"><span class="tr_lang">Products</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Edit</span></li>
         </ol>
     </nav>
     <div class="row">
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Product</h4>
-                    <p class="card-description">sum text</p>
+                    <h4 class="card-title"><span class="tr_lang">Edit</span> <span class="tr_lang">product</span></h4>
+                    <p class="card-description"><span class="tr_lang">some_text</span></p>
                         <form action="/api/products/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label>Pattern</label>
+                                    <label><span class="tr_lang">Pattern</span></label>
                                     <select class="select2 w-100" name="patternId"  id="patternId">
-                                        <option value="<%= data.parent.id%>" selected="selected"><%= data.parent.name %></option>
+                                        <option value="<%= data.parent.id%>" selected="selected"><%=JSON.parse(data.parent.name)[lang]%></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="price">Price</label>
+                                    <label for="price"><span class="tr_lang">Price</span></label>
                                     <input id="price" name="price" value="<%= data.price %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="priceLast">Price Last</label>
+                                    <label for="priceLast"><span class="tr_lang">Price Last</span></label>
                                     <input id="priceLast" name="priceLast" value="<%= data.priceLast %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="discount">Discount</label>
+                                    <label for="discount"><span class="tr_lang">Discount</span></label>
                                     <input id="discount" name="discount" value="<%= data.discount %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label>Unit</label>
+                                    <label><span class="tr_lang">Unit</span></label>
                                     <select class="select2 w-100" name="unitId" id="unitId">
-                                        <option value="" >Bosh</option>
+                                        <option value="" ><span class="tr_lang">Empty</span></option>
                                         <% units.forEach(element => { %>
                                             <option value="<%= element.id %>" <% if (element.id==data.unitId) { %>
                                                 selected
-                                            <% } %> ><%= element.name %> (<%= element.key %>)</option>
+                                            <% } %> ><%= JSON.parse(element.name)[lang] %> (<%= element.key %>)</option>
                                         <% }) %>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Sizes</label>
+                                    <label><span class="tr_lang">Sizes</span></label>
                                     <select class="select2 w-100" name="sizes[]" id="sizes" multiple="multiple">
                                         <% sizes.forEach(element => { %>
                                             <option value="<%= element.id %>"<% if (data.sizes.find(x => x.id === element.id)) { %>
@@ -54,25 +54,25 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Colors</label>
+                                    <label><span class="tr_lang">Colors</span></label>
                                     <select class="select2 w-100" name="colors[]" id="colors" multiple="multiple">
                                         <% colors.forEach(element => { %>
                                             <option value="<%= element.id %>"<% if (data.colors.find(x => x.id === element.id)) { %>
                                                 selected
-                                            <% } %>><span style="background-color:'<%= element.code %>';height: 14px;width: 14px;"><%= element.code %></span> <%= element.name %> </option>
+                                            <% } %>><span style="background-color:'<%= element.code %>';height: 14px;width: 14px;"><%= element.code %></span> <%= JSON.parse(element.name)[lang] %> </option>
                                         <% }) %>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="amount">Amount</label>
+                                    <label for="amount"><span class="tr_lang">Amount</span></label>
                                     <input id="amount" name="amount" value="<%= data.amount %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="barcode">Barcode</label>
+                                    <label for="barcode"><span class="tr_lang">Barcode</span></label>
                                     <input id="barcode" name="barcode" value="<%= data.barcode %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="order">order</label>
+                                    <label for="order"><span class="tr_lang">Order</span></label>
                                     <input id="order" name="order"  value="<%= data.order %>" class="form-control" type="number">
                                 </div>
                                 <div class="form-check form-check-flat form-check-primary">
@@ -82,7 +82,7 @@
                                     </label>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                     </form>
@@ -202,7 +202,7 @@
                                 url='/uploads'+item.documents[0].path;
                             }
                             return {
-                                text: item.name+', '+item.brand.name+', '+item.cat.name+', copyed('+item.children.length+')',
+                                text: tr(item.name)+', '+tr(item.brand.name)+', '+tr(item.cat.name)+', copyed('+item.children.length+')',
                                 id: item.id,
                                 url
                             }

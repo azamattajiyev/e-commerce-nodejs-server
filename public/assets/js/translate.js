@@ -1,12 +1,29 @@
+let words;
 
 $(document).ready(async function(){
-    let words;
     let lang=$('html').attr('lang')
     const res=await fetch(`/assets/lang/${lang}.json`)
     words = await res.json()
+    
     $('.tr_lang').each(function( index ) {
         let key=$( this ).text();
-        $( this ).empty().append(words[key])
+        let tagname=$( this ).prop("tagName").toLowerCase();
+        switch (tagname) {
+            case 'span':
+                $( this ).empty().append(word(key))
+                break;
+            case 'input':
+                key=$( this ).attr('placeholder')
+                $( this ).attr('placeholder',word(key))
+                break;
+            case 'textarea':
+                key=$( this ).attr('placeholder')
+                $( this ).attr('placeholder',word(key))
+                break;
+            default:
+                break;
+        }
+        console.log(tagname);
     });
     let pathname=''
     let array=window.location.pathname.split('/')
@@ -18,4 +35,9 @@ $(document).ready(async function(){
         $( this ).attr('href','/'+toggle_lang+pathname)
     });
 })
-
+const word=(key)=>{
+    if (words[key]) {
+        return words[key]
+    }
+    return key
+}

@@ -2,32 +2,32 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/roles/">Roles</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/roles/"><span class="tr_lang">Roles</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Edit</span></li>
         </ol>
     </nav>
     <div class="row">
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Store</h4>
-                    <p class="card-description">sum text</p>
+                    <h4 class="card-title"><span class="tr_lang">Edit</span> <span class="tr_lang">role</span></h4>
+                    <p class="card-description"><span class="tr_lang">some_text</span></p>
                         <form action="/api/roles/update/" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="nameTm">Name (Tm)</label>
+                                    <label for="nameTm"><span class="tr_lang">Name</span> (Tm)</label>
                                     <input id="nameTm" name="nameTm"value="<%= JSON.parse(data.name).tm %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nameRu">Name (Ru)</label>
+                                    <label for="nameRu"><span class="tr_lang">Name</span> (Ru)</label>
                                     <input id="nameRu" name="nameRu"value="<%= JSON.parse(data.name).ru %>" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-									<label>Permission</label>
+									<label><span class="tr_lang">Permission</span></label>
                                     <select class="select2 w-100" name="permissions" id="permissions"></select>
 								</div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                     </form>
@@ -121,7 +121,7 @@
             .append($("<option></option>")
             .attr("selected", element.selected )
             .attr("value", element.id )
-            .text(element.name ));
+            .text(tr(element.name)));
         });
         $("#"+id).trigger("change");
     }

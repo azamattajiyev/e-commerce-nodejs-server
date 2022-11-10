@@ -93,9 +93,11 @@
         $('.input-images-1').imageUploader({
             preloaded:await getImages(JSON.parse('<%- JSON.stringify(data.documents) %>') ),
             imagesInputName: 'photos',
+            label:'drag_drop_files_here_or_click_to_browse',
             multiple:false,
         });
 
+        $('.upload-text span').addClass('tr_lang')
         $('input[name="photos[]"]').change(async function(){
             files=[]
             await $.each($(this)[0].files,async function(i, file) {

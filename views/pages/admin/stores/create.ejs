@@ -2,71 +2,71 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/stores/">Stores</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/stores/"><span class="tr_lang">Stores</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Create</span></li>
         </ol>
     </nav>
     <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add Stroe</h4>
-                        <p class="card-description">sum text</p>
+                        <h4 class="card-title"><span class="tr_lang">Add</span> <span class="tr_lang">store</span></h4>
+                        <p class="card-description"><span class="tr_lang">some_text</span></p>
                         <form action="/api/stores/store" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="nameTm">Name (Tm)</label>
+                                    <label for="nameTm"><span class="tr_lang">Name</span> (Tm)</label>
                                     <input id="nameTm" name="nameTm" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nameRu">Name (Ru)</label>
+                                    <label for="nameRu"><span class="tr_lang">Name</span> (Ru)</label>
                                     <input id="nameRu" name="nameRu" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="phoneNumbers">Phone Numbers (1,2,...)</label>
+                                    <label for="phoneNumbers"><span class="tr_lang">phone_numbers</span> (1,2,...)</label>
                                     <input id="phoneNumbers" name="phoneNumbers" class="form-control" type="text"
                                     placeholder="99361234567,99362345678,...">
                                 </div>
                                 <div class="form-group">
-									<label>Email</label>
+									<label><span class="tr_lang">Email</span></label>
                                     <input id="email" name="email" class="form-control" type="email">
 								</div>
                                 <div class="form-group">
-									<label>Location</label>
+									<label><span class="tr_lang">Location</span></label>
                                     <select class="select2 w-100" name="locId" id="locId">
                                         <option value="---" selected disabled>Bosh</option>
                                     </select>
 								</div>
                                 <div class="form-group">
-									<label>Category</label>
+									<label><span class="tr_lang">Category</span></label>
                                     <select class="select2 w-100" name="categories" id="categories"></select>
 								</div>
                                 <div class="form-group">
-									<label>Owner</label>
+									<label><span class="tr_lang">Owner</span></label>
                                     <select class="select2 w-100" name="ownerIds[]" id="ownerIds"></select>
 								</div>
                                 <div class="form-group">
-									<label>Address (Tm)</label>
+									<label><span class="tr_lang">Address</span> (Tm)</label>
                                     <input id="addressTm" name="addressTm" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>Address (Ru)</label>
+									<label><span class="tr_lang">Address</span> (Ru)</label>
                                     <input id="addressRu" name="addressRu" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>delivery_price</label>
+									<label><span class="tr_lang">delivery_price</span></label>
                                     <input id="delivery_price" name="delivery_price" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>delivery_price_ex</label>
+									<label><span class="tr_lang">delivery_price_ex</span></label>
                                     <input id="delivery_price_ex" name="delivery_price_ex" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>delivery_free</label>
+									<label><span class="tr_lang">delivery_free</span></label>
                                     <input id="delivery_free" name="delivery_free" class="form-control" type="text">
 								</div>
                                 <div class="form-group">
-									<label>Order</label>
+									<label><span class="tr_lang">Order</span></label>
                                     <input id="order" name="order" class="form-control" type="number">
 								</div>
                                 <div class="form-check form-check-flat form-check-primary">
@@ -77,12 +77,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-field">
-                                        <label class="active">Photos</label>
+                                        <label class="active"><span class="tr_lang">Images</span></label>
                                         <div class="input-images-1" style="padding-top: .5rem;"></div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                         </form>
@@ -159,8 +159,10 @@
     const onChange =()=>{
         $('.input-images-1').imageUploader({
             imagesInputName: 'photos',
+            label:'drag_drop_files_here_or_click_to_browse',
             multiple:true
         });
+        $('.upload-text span').addClass('tr_lang')
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -218,7 +220,7 @@
                                 url='/uploads'+item.documents[0].path;
                             }
                             return {
-                                text: item.name,
+                                text: tr(item.name),
                                 id: item.id,
                                 url
                             }
@@ -270,7 +272,7 @@
             .append($("<option></option>")
             .attr("selected", element.selected )
             .attr("value", element.id )
-            .text(str+element.name ));
+            .text(str+tr(element.name) ));
         });
     }
     const getSelectData=(name,id,search={},)=>{

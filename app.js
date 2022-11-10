@@ -52,8 +52,11 @@ app.use(function(err, req, res, next) {
   // // render the error page
   // err.status=err.status || 500;
   // res.status(err.status || 500);
+  const lang = req.params.lang;
+
   if (err.status!=500) {
     res.render('pages/error/404', {
+      lang,
       layout:'./layouts/error',
       extractScripts: true,
       status:err.status,
@@ -61,6 +64,7 @@ app.use(function(err, req, res, next) {
     })
   } else {
     res.render('pages/error/500', {
+      lang,
       layout:'./layouts/error',
       extractScripts: true,
       message:err.message,

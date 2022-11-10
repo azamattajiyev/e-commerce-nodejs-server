@@ -2,7 +2,7 @@
     <div class="page-content" style="width: 80%;">
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Brands</li>
+                <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Brands</span></li>
             </ol>
         </nav>
         <div class="row">
@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-baseline mb-2">
-                            <h6 class="card-title mb-0">Brands</h6>
+                            <h6 class="card-title mb-0"><span class="tr_lang">Brands</span></h6>
                             <input type="hidden" id="route" value="brands">
                             <div class="dropdown mb-2">
                                 <button class="btn p-0" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,8 +27,8 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <p class="card-description" style="white-space: nowrap;">
-                                <a class="btn btn-primary" href="/admin/brands/create">
-                                    Add brand
+                                <a class="btn btn-primary" href="/<%= lang %>/admin/brands/create">
+                                    <span class="tr_lang">Add</span> <span class="tr_lang">brand</span>
                                 </a>
                             </p>
                             <div style=" width: 8rem;">
@@ -55,10 +55,10 @@
                                             <span class="tr_lang">description</span>
                                         </th>
                                         <th>
-                                            address
+                                            <span class="tr_lang">address</span>
                                         </th>
                                         <th>
-                                            active
+                                            <span class="tr_lang">active</span>
                                         </th>
                                     </tr>
                                         <tr>
@@ -124,7 +124,7 @@
             ${activeBtn(item.active,item.id,i)}
         </td>
         <td>
-            <a href="/admin/brands/edit/${item.id}">
+            <a href="/<%= lang %>/admin/brands/edit/${item.id}">
                 <button type="button" class="btn btn-primary btn-icon">
                     <svg xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" viewBox="0 0 24 24"

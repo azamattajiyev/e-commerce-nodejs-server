@@ -2,28 +2,28 @@
 <div class="page-content">
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/locations/">Locations</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item"><a href="/<%= lang %>/admin/locations/"><span class="tr_lang">Locations</span></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><span class="tr_lang">Create</span></li>
         </ol>
     </nav>
     <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add Location</h4>
-                        <p class="card-description">sum text</p>
+                        <h4 class="card-title"><span class="tr_lang">Add</span> <span class="tr_lang">location</span></h4>
+                        <p class="card-description"><span class="tr_lang">some_text</span></p>
                             <form action="/api/locations/store" method="post" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-									<label>Parent</label>
+									<label><span class="tr_lang">Belonging</span></label>
                                     <select class="select2 w-100" name="parentId" id="parentId"></select>
 								</div>
                                 <div class="form-group">
-                                    <label for="nameTm">Name (Tm)</label>
+                                    <label for="nameTm"><span class="tr_lang">Name</span> (Tm)</label>
                                     <input id="nameTm" name="nameTm" class="form-control" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nameRu">Name (Ru)</label>
+                                    <label for="nameRu"><span class="tr_lang">Name</span> (Ru)</label>
                                     <input id="nameRu" name="nameRu" class="form-control" type="text">
                                 </div>
                                 <div class="form-check form-check-flat form-check-primary">
@@ -33,7 +33,7 @@
                                     </label>
                                 </div>
                                 <button class="btn btn-primary submitter" type="submit">
-                                    Save
+                                    <span class="tr_lang">Save</span>
                                 </button>
                             </fieldset>
                             </form>
@@ -111,7 +111,7 @@
             form.active=null
         })
         $("#parentId").select2({
-            placeholder: 'Select',
+            placeholder: 'belonging_select',
             minimumInputLength: 1,
             templateResult: formatState, //this is for append country flag.
             ajax: {
@@ -137,10 +137,10 @@
                         results: $.map(data.data.tabledata, function (item) {
                             let pname=''
                             if (item.parent) {
-                                pname=' ('+item.parent.name+')'
+                                pname=' ('+tr(item.parent.name)+')'
                             }
                             return {
-                                text: item.name+pname,
+                                text: tr(item.name)+pname,
                                 id: item.id,
                             }
                         }),
@@ -152,6 +152,7 @@
 
             }
         });
+        $('.select2-selection__placeholder').addClass('tr_lang')
     }
     function formatState (state) {
         console.log(state);

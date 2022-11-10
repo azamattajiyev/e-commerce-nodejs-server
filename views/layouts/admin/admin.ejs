@@ -56,6 +56,10 @@
 	<script>
         let lang=$('html').attr('lang')
         const tr=(text)=>{
+			if (text==null||text=='') {
+				text='{"tm":"yok","ru":"нет"}'
+			}
+			// console.log(JSON.parse(text));
             return JSON.parse(text)[lang]
         }
     </script>
@@ -83,8 +87,5 @@
 	<script src="/assets/js/dashboard.js"></script>
 	<script src="/assets/js/datepicker.js"></script>
 	<!-- end custom js for this page -->
-	<script>
-		$()
-	</script>
 </body>
 </html>
