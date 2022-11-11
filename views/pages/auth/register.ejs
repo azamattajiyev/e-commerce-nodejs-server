@@ -14,20 +14,18 @@
   display: none;
 }
 .active{
-  position: absolute;right: 15px;top: 7px;z-index: 99;
+  position: absolute;right: 15px;top: 6px;z-index: 99;
   display: block;
   cursor: pointer;
 }
-.error{
-  border-color: #E91E63 !important;
-}
 </style>
-<div class="card">
+ <div class="card">
     <div class="row">
       <div class="col-md-4 pr-md-0">
         <div class="auth-left-wrapper">
+
         </div>
-      </div> 
+      </div>
       <div class="col-md-8 pl-md-0">
         <div class="auth-form-wrapper px-4 py-5">
           <div class="d-flex" style="justify-content: space-between;  ">
@@ -42,11 +40,27 @@
               </div>
             </span>
           </div>
-          <h5 class="text-muted font-weight-normal mb-4"><span class="tr_lang">welcome_text</span></h5>
-          <form method="post" action="/<%= lang %>/login"  class="forms-sample">
+          <h5 class="text-muted font-weight-normal mb-4"><span class="tr_lang">create_a_free_account</span></h5>
+          <form method="post" action="/<%= lang %>/register" class="forms-sample">
+            <div class="form-group">
+              <label for="name"><span class="tr_lang" >Name</span></label>
+              <input type="text" class="form-control tr_lang" id="name" name="name" autocomplete="Name" placeholder="Name">
+            </div>
             <div class="form-group">
               <label for="username"><span class="tr_lang"  <% if (message) { %> style="color: #E91E63 !important;" <% } %> >Username</span></label>
-              <input type="text" class="form-control <% if (message) { %> error <% } %> tr_lang" id="username" name="username" placeholder="Username">
+              <input type="text" class="form-control tr_lang" id="username" name="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <label for="email"><span class="tr_lang"  <% if (message) { %> style="color: #E91E63 !important;" <% } %> >Email</span></label>
+              <input type="email" class="form-control tr_lang" id="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <label for="password"><span class="tr_lang" <% if (message) { %> style="color: #E91E63 !important;" <% } %> >Password</span></label>
+              <div style="position: relative;">
+                <input type="password" name="password" class="form-control tr_lang <% if (message) { %> error<% } %>" id="password" autocomplete="current-password" placeholder="Password">
+                <div id="close" class="disable active"style="top: 9px;"><i class="feather-16 close" data-feather="eye-off"></i></div>
+                <div id="open"  class="disable "><i class="feather-16 open" data-feather="eye"></i></div>
+              </div>
             </div>
             <div class="form-group">
               <label for="password"><span class="tr_lang" <% if (message) { %> style="color: #E91E63 !important;" <% } %> >Password</span></label>
@@ -60,11 +74,10 @@
               <h5 class="text-muted font-weight-normal mb-4" style="color: #E91E63 !important;"><%= message[lang] %></h5>
             <% } %>
             <div class="mt-3">
-              <button type="submit" class="btn btn-primary mr-2 mb-2 mb-md-0 text-white"><span class="tr_lang">Login</span></button>
+              <button type="submit" class="btn btn-primary mr-2 mb-2 mb-md-0 text-white"><span class="tr_lang">sign_un</span></button>
             </div>
-            <a href="/<%= lang %>/register" class="d-block mt-3 text-muted"><span class="tr_lang">not_a_user_sign_up</span></a>
+            <a href="/<%= lang %>/login" class="d-block mt-3 text-muted"><span class="tr_lang" >already_user_sign_in</span></a>
           </form>
-          
         </div>
       </div>
     </div>

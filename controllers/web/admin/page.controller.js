@@ -13,7 +13,8 @@ class PageController {
   }
 
   async login(req, res, next) {
-    res.render('pages/auth/login', { title:'Login', layout:'./layouts/empty'})
+    res.render('pages/auth/login', { title:'Login', layout:'./layouts/empty',
+    extractScripts: true})
   }
 
   async brands(req, res, next) {

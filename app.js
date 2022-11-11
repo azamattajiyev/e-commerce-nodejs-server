@@ -19,7 +19,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts)
-app.set('layout', 'admin','empty','error');
+app.set('layout', 'admin','empty','error','auth');
 app.use(session({
   name: 'myCookie',
 	secret: process.env.SESSION_SECRET,

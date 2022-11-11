@@ -4,6 +4,7 @@ module.exports = (req, res, next) => {
 		next();
 	} else {
 		// Not logged in
-		return res.redirect('/login')
+		const lang = req.params.lang;
+		return res.redirect(`/${lang}/login`) 
 	}
 };

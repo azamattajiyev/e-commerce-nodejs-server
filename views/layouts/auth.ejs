@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title><%= title %> </title>
+	<!-- core:css -->
+	<link rel="stylesheet" href="/assets/vendors/core/core.css">
+	<!-- endinject -->
+  <!-- plugin css for this page -->
+	<!-- end plugin css for this page -->
+	<!-- inject:css -->
+	<link rel="stylesheet" href="/assets/fonts/feather-font/css/iconfont.css">
+	<link rel="stylesheet" href="/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+	<!-- endinject -->
+  <!-- Layout styles -->  
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="/assets/images/favicon.png" />
+</head>
+<body>
+	<div class="main-wrapper">
+		<div class="page-wrapper full-page">
+			<div class="page-content d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+
+				<div class="row w-100 mx-0 auth-page">
+					<div class="col-md-8 col-xl-6 mx-auto">
+  						<%-body%>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- core:js -->
+	<script src="/assets/vendors/core/core.js"></script>
+	<!-- endinject -->
+  <!-- plugin js for this page -->
+	<!-- end plugin js for this page -->
+	<!-- inject:js -->
+	<script src="/assets/vendors/feather-icons/feather.min.js"></script>
+	<script src="/assets/js/template.js"></script>
+	<script src="/assets/js/translate.js"></script>
+	<!-- endinject -->
+  <!-- custom js for this page -->
+  <script>
+	let lang=$('html').attr('lang')
+	const tr=(text)=>{
+		if (text==null||text=='') {
+			text='{"tm":"yok","ru":"нет"}'
+		}
+		// console.log(JSON.parse(text));
+		return JSON.parse(text)[lang]
+	}
+</script>
+<script type="text/javascript">
+	var loc = window.location.pathname;
+	$('.sidebar-body').find('a').each(function() {
+		var href = $(this).attr('href');
+		if(loc == href){
+			$(this).parent().addClass('active');
+		}
+		// $(this).parent().toggleClass('active',$(this).attr('href') === loc);
+	});
+</script>
+  <%- script %>
+	<!-- end custom js for this page -->
+</body>
+</html>
