@@ -146,7 +146,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Document',
-    tablename:'documents'
+    tableName: 'documents'
   });
   return Document;
 };

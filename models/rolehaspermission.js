@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'RoleHasPermission',
-    tablename:'role_has_permission'
+    tableName: 'role_has_permission'
   });
   return RoleHasPermission;
 };
