@@ -11,12 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.Document,{as: 'documents',foreignKey:'id'});
+      this.hasMany(models.Product,{as: 'products',foreignKey:'id'})
       this.belongsTo(models.Location, {as: 'location',foreignKey:'locId',});
-      // this.belongsToMany(models.Product, {
-      //   through: 'product_stores',
-      //   foreignKey: 'storeId', // replaces `categoryId`
-      //   otherKey: 'productId' // replaces `productId`
-      // });
       this.belongsToMany(models.Category, {
         through: models.store_categories,
         as:'categories',

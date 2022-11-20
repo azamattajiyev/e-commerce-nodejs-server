@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Document,{as: 'documents', foreignKey:'id'});
       this.belongsTo(models.Brand, {as: 'brand',foreignKey:'brandId',});
       this.belongsTo(models.Unit, {as: 'unit',foreignKey:'unitId',});
+      this.belongsTo(models.Store, {as: 'store',foreignKey:'storeId',});
       this.belongsTo(models.Category, {as: 'cat',foreignKey:'catId',});
       this.belongsTo(models.Product,{ as: 'parent', foreignKey:'parentId'});
       this.hasMany(models.Product, { as: 'children', foreignKey: 'parentId',useJunctionTable: false  });
@@ -34,11 +35,6 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "sizeId",
         foreignKey: "productId",
       });
-      // this.belongsToMany(models.Store, {
-      //     through: 'product_stores',
-      //     foreignKey: 'productId', // replaces `productId`
-      //     otherKey: 'storeId' // replaces `categoryId`
-      // });
       this.belongsTo(models.Category, {as: 'category',foreignKey:'catId',});
     }
   }
@@ -46,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     parentId: DataTypes.INTEGER,
+    storeId: DataTypes.INTEGER,
     active: DataTypes.BOOLEAN,
     order: DataTypes.INTEGER,
     price: DataTypes.DOUBLE,

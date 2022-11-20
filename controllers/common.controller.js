@@ -9,6 +9,10 @@ const paginateData = (data,limit=25,page=1) => {
         tabledata,
     })
 }
+const mobilData = (data) => {
+    const { rows: tabledata } = data;
+    return  tabledata
+}
 const errorRes = (message) => {
     return {
         success: false,

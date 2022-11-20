@@ -10,7 +10,10 @@ const {
   Color,
   detal,
   Document,
-  product_colors,product_sizes,
+  product_colors,
+  product_sizes,
+  sequelize,
+  Location
 }=require("../../models");
 const {paginateData,errorRes,successRes,attributes,excludes} =require("../common.controller");
 const {Op} = require('sequelize');
@@ -281,6 +284,134 @@ exports.findAll = async(req, res) => {
       data,
       limit,
       page));
+  } catch (error) {
+    console.log(error);
+    res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Products."));
+  }
+};
+exports.findAllTest = async(req, res) => {
+  try{
+    var condition = {
+      parentId:{ [Op.ne]: null },
+      pattern:false
+    }
+    let {page,limit,search} = req.body
+    // console.log(page,limit,search);
+    if (search) {
+      for (const [key, value] of Object.entries(search)) {
+        if(value!=''){
+          condition[key] = { [Op.like]: `%${value}%` }
+        }
+      }
+    }
+    limit=limit ?parseInt(limit):10
+    const offset = page ? ((page-1)*limit) : 0;
+    // console.log(offset,limit,condition);
+
+
+    try {
+      await sequelize.transaction(async (transaction) => {
+      const data= await Product.findAndCountAll({
+        limit,
+        offset,
+        where: condition,
+        attributes: ['id'],
+      }, { transaction })
+      let result=[]
+      for (let i = 0; i < data.rows.length; i++) {
+        result.push(await Product.findOne({
+          where:{id:data.rows[i].id,},
+          attributes: attributes.product,
+          subQuery:false,
+          include:[
+            {model:Unit,
+              as:'unit',
+            },
+            {model:Size,
+              as:'sizes',
+              through:{
+                attributes: [],
+              },
+              attributes: [
+                'id','name',
+                [sequelize.literal('`sizes->product_sizes`.`active`'),'active'],
+                [sequelize.literal('`sizes->product_sizes`.`amount`'),'amount'],
+              ],
+            },
+            {model:Store,
+              as:'store',
+              include:[
+                // {
+                //   model:Location,
+                //   as:'location'
+                // },
+                {
+                  model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Store',
+                    modelId:{[Op.col]: 'Store.id'}
+                  }
+                },
+              ],
+              attributes: {
+                exclude: ['createdAt','updatedAt','storeId']
+              },
+            },
+            {model:Color,
+              as:'colors',attributes: [
+                'id','name','code',
+                [sequelize.literal('`colors->product_colors`.`active`'),'active'],
+                [sequelize.literal('`colors->product_colors`.`amount`'),'amount'],
+              ],
+              through:{
+                attributes: [],
+              }
+            },
+            {model: Product,
+              as:'parent',
+              attributes: attributes.productPattern,
+              include:[
+                {
+                  model:Brand,as:'brand',attributes: {
+                    exclude: excludes.time
+                  },
+                },
+                {
+                  model:Category,as:'category',attributes: {
+                    exclude: excludes.time
+                  },
+                },
+                {model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Product',
+                    modelId:{[Op.col]: 'Product.parentId'}
+                  }
+                },
+              ]
+            },
+            // {model: Document, as: 'documents',
+            //   on: {
+            //     modelName: 'Product',
+            //     modelId:{[Op.col]: 'Product.id'}
+            //   }
+            // },
+          ],
+        }, { transaction }))
+      }
+      // await t.commit();
+      res.status(200).json(paginateData(
+        { count: data.count, rows: result },
+        limit,
+        page));})
+    } catch (error) {
+      console.log(error);
+      // If the execution reaches this line, an error was thrown.
+      // We rollback the transaction.
+      // await t.rollback();
+    
+    }
+    // console.log( await data.rows[0].getColors());
+   
   } catch (error) {
     console.log(error);
     res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Products."));

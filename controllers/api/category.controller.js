@@ -95,6 +95,7 @@ exports.findAll = async(req, res) => {
         },
       ]
     })
+    // res.status(200).json(data.rows);
     res.status(200).json(paginateData(data,limit,page));
   } catch (error) {
     res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Categories."));

@@ -17,6 +17,9 @@ module.exports = {
       parentId: {
         type: Sequelize.INTEGER
       },
+      storeId: {
+        type: Sequelize.INTEGER
+      },
       active: {
         type: Sequelize.BOOLEAN,
         defaultValue: 1,
