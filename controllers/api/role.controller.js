@@ -1,4 +1,4 @@
-const {Role,Permission,RoleHasPermission} = require("../../models");
+const { Role, Permission, role_has_permission } = require("../../models");
 const {paginateData,errorRes,successRes,selecteditem} =require("../common.controller");
 const {Op} = require('sequelize');
 const NodeCache = require("node-cache");
@@ -88,7 +88,7 @@ class RoleController{
             // Save Brand in the database
             let data = await Role.create(newRole)
             if (data) {
-                await RoleHasPermission.savePermissions(data.dataValues.id,permissions)
+                await role_has_permission.savePermissions(data.dataValues.id, permissions)
                 myCache.del( `role_${data.dataValues.id}` )
                 myCache.del('myRole')
             }
@@ -127,8 +127,8 @@ class RoleController{
                 where: { id:id }
             })
             if (data) {
-                await RoleHasPermission.clearAllById(id)
-                await RoleHasPermission.savePermissions(id,permissions)
+                await role_has_permission.clearAllById(id)
+                await role_has_permission.savePermissions(id, permissions)
                 myCache.del( `role_${id}`)
                 myCache.del('myRole')
             }
@@ -165,7 +165,7 @@ class RoleController{
                 where: { id: id }
             })
             if (num == 1) {
-                await RoleHasPermission.clearAllById(id)
+                await role_has_permission.clearAllById(id)
                 myCache.del( `role_${id}`)
                 myCache.del('myRole')
                 res.status(200).json(successRes(null,"Role was deleted successfully!"));

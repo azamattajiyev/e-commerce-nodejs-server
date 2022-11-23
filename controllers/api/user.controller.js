@@ -1,5 +1,5 @@
-const {User, Document,Role}=require("../../models");
-const {paginateData,errorRes,successRes, selecteditem,} =require("../common.controller");
+const {User, Document,Role,Permission,Store,}=require("../../models");
+const {paginateData,errorRes,successRes, selecteditem,excludes} =require("../common.controller");
 const {Op} = require('sequelize');
 const bcrypt = require('bcryptjs');
 
@@ -132,24 +132,39 @@ exports.findAllselect2 = async(req, res) => {
 
 // Find a single User with an id
 exports.findOne = async (req, res) => {
+  const id = req.params.id;
   try{
-    const id = req.params.id;
     const data = await User.findByPk(id,{
       attributes: {
-        exclude: ['parentId', 'createdAt','updatedAt']
+        exclude:[...excludes.user,,'roleId']
       },
       include:[
-        {model: User,
-          as:'parent',
+        {model: Store,
+          as:'stores',
+          // attributes: ['name'],
           attributes: {
-            exclude: [ 'createdAt','updatedAt']
+            exclude: ['createdAt','updatedAt','storeId']
           },
+          through:{
+            attributes: [],
+          },
+          include:[
+            {model: Document, as: 'documents',
+              on: {
+                modelName: 'Store',
+                modelId:{[Op.col]: 'stores.id'}
+              }
+            },
+          ]
         },
-        {model: User,
-          as:'children',
-          attributes: {
-            exclude: [ 'createdAt','updatedAt']
-          },
+        {model: Role,
+          as:'role',
+          attributes: ['id','name'],
+          include:[
+            {model: Permission,
+              as:'permissions',
+            }
+          ],
         },
         {model: Document, as: 'documents',
           on: {
@@ -165,6 +180,7 @@ exports.findOne = async (req, res) => {
       res.status(200).json(errorRes(`Cannot find User with id=${id}.`));
     }
   } catch (error) {
+    console.log(error);
     res.status(200).json(errorRes("Error retrieving User with id=" + id));
   }
 };

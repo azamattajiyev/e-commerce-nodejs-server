@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class RoleHasPermission extends Model {
+  class role_has_permission extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,29 +13,29 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  RoleHasPermission.savePermissions=async(rid, permissions)=>{
+  role_has_permission.savePermissions = async (rid, permissions) => {
     for(const permissionId of permissions) {
-      RoleHasPermission.create({
+      role_has_permission.create({
           permissionId,
           roleId:rid
       })
   }
   }
-  RoleHasPermission.clearAllById=async(rid)=>{
-    await RoleHasPermission.destroy({
+  role_has_permission.clearAllById = async (rid) => {
+    await role_has_permission.destroy({
       where: {
         roleId:rid
       },
       truncate: false
     })
   }
-  RoleHasPermission.init({
+  role_has_permission.init({
     roleId: DataTypes.INTEGER,
     permissionId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'RoleHasPermission',
-    tableName: 'role_has_permission'
+    modelName: 'role_has_permission',
+    tableName: 'role_has_permissions'
   });
-  return RoleHasPermission;
+  return role_has_permission;
 };

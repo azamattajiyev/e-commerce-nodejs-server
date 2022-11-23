@@ -16,7 +16,7 @@ module.exports = {
       },
       {
         name: "Merdan",
-        username: 'merdansatyjy',
+        username: '61234567',
         email: 'merdan@satyjy.com',
         password: await bcrypt.hash('12345678', 10),
         refreshToken: null,

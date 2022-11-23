@@ -74,5 +74,8 @@
     "already_user_sign_in":"Siz eýýäm hasaba aldyňyzmy?",
     "sign_un":"Hasaba gir",
     "pattern":"nagyş",
-    "brand":"marka"
+    "brand":"marka",
+    "password":"Parol",
+    "password_confirm":"Paroly tassykla",
+    "Role":"Rol"
 }

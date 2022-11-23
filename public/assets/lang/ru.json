@@ -74,5 +74,8 @@
     "already_user_sign_in":"Уже регистрированы?",
     "sign_un":"Зарегистрироваться",
     "pattern":"шаблон",
-    "brand":"бренд"
+    "brand":"бренд",
+    "password":"Пароль",
+    "password_confirm":"Подтвердить пароль",
+    "Role":"Роль"
 }

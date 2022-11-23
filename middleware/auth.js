@@ -8,7 +8,7 @@ module.exports =async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization || req.headers.Authorization;
         if (!authHeader?.startsWith('Bearer '))
-            return res.status(200).json(errorRes('Error 401'));
+            return res.status(200).json(errorRes('401'));
         const token = authHeader.split(' ')[1];
         if (!token)
             return res.status(200).json(errorRes('Access denied.(token yok) error 403'));
