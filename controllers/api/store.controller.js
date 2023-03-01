@@ -1,4 +1,4 @@
-const {Store, Document,Category,store_categories,Location,UserStores,}=require("../../models");
+const {Store, Document,Category,store_categories,Location,UserStores,Address}=require("../../models");
 const {paginateData,errorRes,successRes, selecteditem,} =require("../common.controller");
 const {Op} = require('sequelize');
 // const NodeCache = require("node-cache");
@@ -9,30 +9,20 @@ exports.create =async (req, res) => {
     const {
       nameTm,
       nameRu,
-      addressTm,
-      addressRu,
       email,
       active,
       phoneNumbers,
-      locId,
-      latitude,
-      lingitude,
-      delivery_price,
-      delivery_price_ex,
-      delivery_free,
       order,
       categories,
       ownerIds,
       files,
     } =req.body
+    req.body.tel=phoneNumbers
     // Validate request
     console.log(req.body);
     if (!nameRu
       || !nameTm
-      || !addressTm
-      || !addressRu
-      || !phoneNumbers
-      || !locId) {
+      || !phoneNumbers) {
       res.json(errorRes('Content can not be empty!'));
       return;
     }
@@ -46,17 +36,8 @@ exports.create =async (req, res) => {
       active: active ? 1 : 0,
       phoneNumbers,
       email:email?email:null,
-      address:JSON.stringify({
-        tm:addressTm,
-        ru:addressRu
-      }),
-      locId,
-      latitude: latitude?latitude:null,
-      lingitude:lingitude?lingitude:null,
+      addressId:Address.add(req.body),
       rate: '5.0',
-      delivery_price: delivery_price?delivery_price:0,
-      delivery_price_ex: delivery_price_ex?delivery_price_ex:null,
-      delivery_free: delivery_free? delivery_free:null
     };
     // Save Store in the database
     // myCache.del( "myKey" )
@@ -226,17 +207,9 @@ exports.update =async (req, res) => {
     const {
       nameTm,
       nameRu,
-      addressTm,
-      addressRu,
       email,
       active,
       phoneNumbers,
-      locId,
-      latitude,
-      lingitude,
-      delivery_price,
-      delivery_price_ex,
-      delivery_free,
       order,
       categories,
       ownerIds,
@@ -247,10 +220,7 @@ exports.update =async (req, res) => {
     console.log(req.body);
     if (!nameRu
       || !nameTm
-      || !addressTm
-      || !addressRu
-      || !phoneNumbers
-      || !locId) {
+      || !phoneNumbers) {
       res.json(errorRes('Content can not be empty!'));
       return;
     }
@@ -263,17 +233,8 @@ exports.update =async (req, res) => {
       active: active ? 1 : 0,
       phoneNumbers,
       email:email?email:null,
-      address:JSON.stringify({
-        tm:addressTm,
-        ru:addressRu
-      }),
-      locId,
-      latitude: latitude?latitude:null,
-      lingitude:lingitude?lingitude:null,
+      addressId,
       rate: '5.0',
-      delivery_price: delivery_price?delivery_price:0,
-      delivery_price_ex: delivery_price_ex?delivery_price_ex:null,
-      delivery_free: delivery_free? delivery_free:null
     };
     let data =await Store.update(newStore, {
       where: { id:id }
@@ -337,32 +298,5 @@ exports.delete = async(req, res) => {
     }
   } catch (error) {
     res.status(200).json(errorRes( "Could not delete Store with id=" + id +" "+error.message));
-  }
-};
-
-
-// Delete all Stores from the database.
-exports.deleteAll = (req, res) => {
-    Store.destroy({
-        where: {},
-        truncate: false
-      })
-        .then(nums => {
-          res.send({ message: `${nums} Stores were deleted successfully!` });
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while removing all Stores."
-          });
-        });
-};
-// Find all published Stores
-exports.findAllPublished = async (req, res) => {
-  try {
-    const data=await Store.findAll({ where: { active: true } })
-    res.status(200).json(successRes(data));
-  } catch (error) {
-    res.status(200).json(errorRes( err.message || "Some error occurred while retrieving Stores."));
   }
 };

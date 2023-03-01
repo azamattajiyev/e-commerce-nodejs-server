@@ -10,13 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      this.belongsTo(models.User, {as: 'user',foreignKey:'userId',});
+      this.belongsTo(models.Product, {as: 'product',foreignKey:'productId',});
+      this.belongsToMany(models.Order, {
+        through: models.cardorder,
+        as:"orders",
+        otherKey: "orderId",
+        foreignKey: "cardId",
+      });
     }
   }
   Card.init({
-    orderId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     productId: DataTypes.INTEGER,
-    amout: DataTypes.DOUBLE,
-    price: DataTypes.DOUBLE
+    amount: DataTypes.DOUBLE,
+    price: DataTypes.DOUBLE,
+    status: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Card',

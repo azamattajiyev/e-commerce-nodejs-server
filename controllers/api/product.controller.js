@@ -13,7 +13,11 @@ const {
   product_colors,
   product_sizes,
   sequelize,
-  Location
+  Card,
+  Like,
+  User,
+  Address,
+  Delivery
 }=require("../../models");
 const {paginateData,errorRes,successRes,attributes,excludes} =require("../common.controller");
 const {Op} = require('sequelize');
@@ -637,28 +641,490 @@ exports.delete = async(req, res) => {
   }
 };
 
-// Delete all Products from the database.
-exports.deleteAll = (req, res) => {
-    Product.destroy({
-        where: {},
-        truncate: false
-      })
-        .then(nums => {
-          res.send({ message: `${nums} Products were deleted successfully!` });
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while removing all Products."
-          });
-        });
-};
-// Find all published Products
-exports.findAllPublished = async (req, res) => {
-  try {
-    const data=await Product.findAll({ where: { active: true } })
-    res.status(200).json(successRes(data));
+exports.findAllTest = async(req, res) => {
+  try{
+    var condition = {
+      parentId:{ [Op.ne]: null },
+      pattern:false
+    }
+    let {page,limit,search} = req.body
+    // console.log(page,limit,search);
+    if (search) {
+      for (const [key, value] of Object.entries(search)) {
+        if(value!=''){
+          condition[key] = { [Op.like]: `%${value}%` }
+        }
+      }
+    }
+    limit=limit ?parseInt(limit):10
+    const offset = page ? ((page-1)*limit) : 0;
+    // console.log(offset,limit,condition);
+
+
+    try {
+      await sequelize.transaction(async (transaction) => {
+      const data= await Product.findAndCountAll({
+        limit,
+        offset,
+        where: condition,
+        attributes: ['id'],
+      }, { transaction })
+      let result=[]
+      for (let i = 0; i < data.rows.length; i++) {
+        result.push(await Product.findOne({
+          where:{id:data.rows[i].id,},
+          attributes: attributes.product,
+          subQuery:false,
+          include:[
+            {model:Unit,
+              as:'unit',
+            },
+            {model:Size,
+              as:'sizes',
+              through:{
+                attributes: [],
+              },
+              attributes: [
+                'id','name',
+                [sequelize.literal('`sizes->product_sizes`.`active`'),'active'],
+                [sequelize.literal('`sizes->product_sizes`.`amount`'),'amount'],
+              ],
+            },
+            {model:Store,
+              as:'store',
+              include:[
+                // {
+                //   model:Location,
+                //   as:'location'
+                // },
+                {
+                  model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Store',
+                    modelId:{[Op.col]: 'Store.id'}
+                  }
+                },
+              ],
+              attributes: {
+                exclude: ['createdAt','updatedAt','storeId']
+              },
+            },
+            {model:Color,
+              as:'colors',attributes: [
+                'id','name','code',
+                [sequelize.literal('`colors->product_colors`.`active`'),'active'],
+                [sequelize.literal('`colors->product_colors`.`amount`'),'amount'],
+              ],
+              through:{
+                attributes: [],
+              }
+            },
+            {model: Product,
+              as:'parent',
+              attributes: attributes.productPattern,
+              include:[
+                {
+                  model:Brand,as:'brand',attributes: {
+                    exclude: excludes.time
+                  },
+                },
+                {
+                  model:Category,as:'category',attributes: {
+                    exclude: excludes.time
+                  },
+                },
+                {model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Product',
+                    modelId:{[Op.col]: 'Product.parentId'}
+                  }
+                },
+              ]
+            },
+            // {model: Document, as: 'documents',
+            //   on: {
+            //     modelName: 'Product',
+            //     modelId:{[Op.col]: 'Product.id'}
+            //   }
+            // },
+          ],
+        }, { transaction }))
+      }
+      // await t.commit();
+      res.status(200).json(paginateData(
+        { count: data.count, rows: result },
+        limit,
+        page));})
+    } catch (error) {
+      console.log(error);
+      // If the execution reaches this line, an error was thrown.
+      // We rollback the transaction.
+      // await t.rollback();
+    
+    }
+    // console.log( await data.rows[0].getColors());
+   
   } catch (error) {
-    res.status(200).json(errorRes( err.message || "Some error occurred while retrieving Products."));
+    console.log(error);
+    res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Products."));
   }
 };
+exports.search = async(req, res) => {
+  try{
+    var condition = {
+      parentId:{ [Op.ne]: null },
+      pattern:false
+    }
+    var parentCondition ={}
+    let {page,limit,search} = req.body
+    // console.log(page,limit,search);
+    if (search) {
+      for (const [key, value] of Object.entries(search)) {
+        if ( ((key == 'name')||(key == 'description')) && value!='' ) {
+          parentCondition[key] = { [Op.like]: `%${value}%` }
+        }
+      }
+    }
+    limit=limit ?parseInt(limit):10
+    const offset = page ? ((page-1)*limit) : 0;
+    console.log(offset,limit,condition, parentCondition);
+    try {
+      await sequelize.transaction(async (transaction) => {
+      const data= await Product.findAndCountAll({
+        limit,
+        offset,
+        where: condition,
+        include:[
+          {model: Product,
+            as:'parent',
+            attributes: attributes.productPattern,
+            where:parentCondition,
+          },
+        ],
+        attributes: ['id'],
+      }, { transaction })
+      let result=[]
+      for (let i = 0; i < data.rows.length; i++) {
+        result.push(await Product.findOne({
+          where:{id:data.rows[i].id,},
+          attributes: attributes.product,
+          subQuery:false,
+          include:[
+            {model:Unit,
+              as:'unit',
+            },
+            {model:Size,
+              as:'sizes',
+              through:{
+                attributes: [],
+              },
+              attributes: [
+                'id','name',
+                [sequelize.literal('`sizes->product_sizes`.`active`'),'active'],
+                [sequelize.literal('`sizes->product_sizes`.`amount`'),'amount'],
+              ],
+            },
+            {model:Store,
+              as:'store',
+              include:[
+                // {
+                //   model:Location,
+                //   as:'location'
+                // },
+                {
+                  model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Store',
+                    modelId:{[Op.col]: 'Store.id'}
+                  }
+                },
+              ],
+              attributes: {
+                exclude: ['createdAt','updatedAt','storeId']
+              },
+            },
+            {model:Color,
+              as:'colors',attributes: [
+                'id','name','code',
+                [sequelize.literal('`colors->product_colors`.`active`'),'active'],
+                [sequelize.literal('`colors->product_colors`.`amount`'),'amount'],
+              ],
+              through:{
+                attributes: [],
+              }
+            },
+            {model: Product,
+              as:'parent',
+              attributes: attributes.productPattern,
+              where:parentCondition,
+              include:[
+                {
+                  model:Brand,as:'brand',attributes: {
+                    exclude: excludes.time
+                  },
+                  include:[
+                    {model: Document, as: 'documents',
+                      on: {
+                        modelName: 'Brand',
+                        modelId:{[Op.col]: 'parent.brand.id'}
+                      }
+                    },
+                  ]
+                },
+                {
+                  model:Category,as:'category',attributes: {
+                    exclude: excludes.time
+                  },
+                  include:[
+                    {model: Document, as: 'documents',
+                      on: {
+                        modelName: 'Category',
+                        modelId:{[Op.col]: 'Product.parentId'}
+                      }
+                    },
+                  ]
+                },
+                {model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Product',
+                    modelId:{[Op.col]: 'Product.parentId'}
+                  }
+                },
+              ]
+            },
+            // {model: Document, as: 'documents',
+            //   on: {
+            //     modelName: 'Product',
+            //     modelId:{[Op.col]: 'Product.id'}
+            //   }
+            // },
+          ],
+        }, { transaction }))
+      }
+      // await t.commit();
+      res.status(200).json(paginateData(
+        { count: data.count, rows: result },
+        limit,
+        page));})
+    } catch (error) {
+      console.log(error);
+      // If the execution reaches this line, an error was thrown.
+      // We rollback the transaction.
+      // await t.rollback();
+    
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Products."));
+  }
+};
+
+exports.like = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await sequelize.transaction(async (transaction) => {
+      const data = await Product.findByPk(id, { transaction })
+      if (data) {
+        const [like, created] = await Like.findOrCreate({
+          where: {
+            userId: req.user.id,
+            productId:id,
+          },
+          defaults: {
+            userId: req.user.id,
+            productId:id,
+          },
+          transaction
+        },);
+        let de=true
+        if (!created) {
+          await like.destroy({ transaction })
+          de=false
+        }
+        // await transaction.commit();
+        res.status(200).json(successRes(de));
+      } else {
+        res.status(200).json(errorRes(`Cannot find Product with id=${id}.`));
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(200).json(errorRes("Error retrieving Product with id=" + id+" "+error));
+  }
+};
+
+exports.getAllProducts = async(req, res) => {
+  try{
+    console.log(req.body);
+    let {page,offset,limit,condition,parentCondition,deliveryCondition,likeCondition,cartCondition}=Product.createConditions(req);
+    console.log(page,offset,limit,condition, parentCondition,deliveryCondition,likeCondition,cartCondition);
+    await sequelize.transaction(async (transaction) => {
+      try {
+      const data= await Product.findAndCountAll({
+        limit,
+        offset,
+        where: condition,
+        include:[
+          {model: Product,
+            as:'parent',
+            where:parentCondition,
+          },
+          {model: User,
+            as:'likes',
+            attributes: {
+              exclude: ['password', 'userId', 'refreshToken', 'createdAt', 'updatedAt']
+            },
+            where:likeCondition.where,
+            on:likeCondition.on
+          },
+          {model: Card,
+            as:'card',
+            attributes: ['id','amount'],
+            where:cartCondition.where,
+            on:cartCondition.on
+          },
+          {model: Store,
+            as:'store',
+            attributes:['id'],
+            include:[
+              {model: Delivery,
+                as:'deliverys',
+                where:deliveryCondition,
+              },
+            ]
+          },
+        ],
+        attributes: ['id'],
+      }, { transaction })
+      let result=[]
+      for (let i = 0; i < data.rows.length; i++) {
+        result.push(await Product.findOne({
+          where:{id:data.rows[i].id,},
+          attributes: attributes.product,
+          include:[
+            {model:Unit,
+              as:'unit',
+            },
+            {model:Size,
+              as:'sizes',
+              through:{
+                attributes: [],
+              },
+              attributes: [
+                'id','name',
+                [sequelize.literal('`sizes->product_sizes`.`active`'),'active'],
+                [sequelize.literal('`sizes->product_sizes`.`amount`'),'amount'],
+              ],
+            },
+            {model:Store,
+              as:'store',
+              include:[
+                // {
+                //   model:Location,
+                //   as:'location'
+                // },
+                {model: Delivery,
+                  as:'deliverys',
+                  where:deliveryCondition,
+                },
+                {model: Address,
+                  as:'address',
+                },
+                {
+                  model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Store',
+                    modelId:{[Op.col]: 'Store.id'}
+                  }
+                },
+              ],
+              attributes: {
+                exclude: ['createdAt','updatedAt','storeId']
+              },
+            },
+            {model:Color,
+              as:'colors',attributes: [
+                'id','name','code',
+                [sequelize.literal('`colors->product_colors`.`active`'),'active'],
+                [sequelize.literal('`colors->product_colors`.`amount`'),'amount'],
+              ],
+              through:{
+                attributes: [],
+              }
+            },
+            {model: Product,
+              as:'parent',
+              attributes: attributes.productPattern,
+              where:parentCondition,
+              include:[
+                {
+                  model:Brand,as:'brand',attributes: {
+                    exclude: excludes.time
+                  },
+                  include:[
+                    {model: Document, as: 'documents',
+                      on: {
+                        modelName: 'Brand',
+                        modelId:{[Op.col]: 'parent.brand.id'}
+                      }
+                    },
+                  ]
+                },
+                {
+                  model:Category,as:'category',attributes: {
+                    exclude: excludes.time
+                  },
+                  include:[
+                    {model: Document, as: 'documents',
+                      on: {
+                        modelName: 'Category',
+                        modelId:{[Op.col]: 'Product.parentId'}
+                      }
+                    },
+                  ]
+                },
+                {model: Document, as: 'documents',
+                  on: {
+                    modelName: 'Product',
+                    modelId:{[Op.col]: 'Product.parentId'}
+                  }
+                },
+              ]
+            },
+            {model: User,
+              as:'likes',
+              attributes: ['id'],
+              where:likeCondition.where,
+              on:likeCondition.on
+            },
+            {model: Card,
+              as:'card',
+              attributes: ['id','amount'],
+              where:cartCondition.where,
+              on:cartCondition.on
+            },
+            // {model: Document, as: 'documents',
+            //   on: {
+            //     modelName: 'Product',
+            //     modelId:{[Op.col]: 'Product.id'}
+            //   }
+            // },
+          ],
+        }, { transaction }))
+      }
+      // await transaction.commit();
+      res.status(200).json(paginateData(
+        { count: data.count, rows: result },
+        limit,
+        page));
+    } catch (error) {
+      console.log(error);
+      // If the execution reaches this line, an error was thrown.
+      // We rollback the transaction.
+      await transaction.rollback();
+    }})
+  } catch (error) {
+    console.log(error);
+    res.status(200).json(errorRes(error.message || "Some error occurred while retrieving Products."));
+  }
+}

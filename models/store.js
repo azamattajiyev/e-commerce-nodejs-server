@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.Document,{as: 'documents',foreignKey:'id'});
       this.hasMany(models.Product,{as: 'products',foreignKey:'id'})
-      this.belongsTo(models.Location, {as: 'location',foreignKey:'locId',});
+      this.hasMany(models.Delivery,{as: 'deliverys',foreignKey:'id'})
+      this.hasMany(models.Feedback,{as: 'feedbacks', foreignKey:'modelId'});
+      this.belongsTo(models.Address, {as: 'address',foreignKey:'addressId',});
       this.belongsToMany(models.Category, {
         through: models.store_categories,
         as:'categories',
@@ -31,15 +33,12 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     phoneNumbers: DataTypes.STRING,
     email: DataTypes.STRING,
-    address: DataTypes.STRING,
+    addressId: DataTypes.INTEGER,
     order: DataTypes.INTEGER,
-    locId: DataTypes.INTEGER,
-    latitude: DataTypes.DOUBLE,
-    lingitude: DataTypes.DOUBLE,
-    rate: DataTypes.DOUBLE,
-    delivery_price: DataTypes.DOUBLE,
-    delivery_price_ex: DataTypes.DOUBLE,
-    delivery_free: DataTypes.DOUBLE,
+    rating: DataTypes.DOUBLE,
+    // delivery_price: DataTypes.DOUBLE,
+    // delivery_price_ex: DataTypes.DOUBLE,
+    // delivery_free: DataTypes.DOUBLE,
     active: DataTypes.BOOLEAN
   }, {
     sequelize,

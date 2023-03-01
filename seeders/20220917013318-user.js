@@ -5,7 +5,7 @@ module.exports = {
     let users=[
       {
         name: "Aman",
-        username: 'amanadmin',
+        username: '62579053',
         email: 'aman@admin.com',
         password: await bcrypt.hash('12345678', 10),
         refreshToken: null,
@@ -27,7 +27,7 @@ module.exports = {
       },
       {
         name: "Mekan",
-        username: 'mekanalyjy',
+        username: '61111111',
         email: 'mekan@alyjy.com',
         password: await bcrypt.hash('12345678', 10),
         refreshToken: null,

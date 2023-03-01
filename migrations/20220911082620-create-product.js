@@ -54,6 +54,10 @@ module.exports = {
       pattern: {
         type: Sequelize.BOOLEAN
       },
+      rating: {
+        defaultValue: 5,
+        type: Sequelize.DOUBLE,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

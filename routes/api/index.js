@@ -3,6 +3,7 @@ const auth_m = require("../../middleware/auth");
 const category = require("./category");
 const location = require("./location");
 const store = require("./store");
+const card = require("./card");
 const brand = require("./brand");
 const product = require("./product");
 const pattern = require("./pattern");
@@ -14,6 +15,7 @@ var router = express.Router();
     router.use('/locations', location)
     router.use('/brands', brand)
     router.use('/stores', store)
+    router.use('/cards', auth_m,card)
     router.use('/products', product)
     router.use('/patterns', pattern)
     router.use('/users', user)

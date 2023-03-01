@@ -43,7 +43,7 @@ const selecteditem=(array,ids=[])=>{
 const attributes={
     productPattern:['id','name','description',],
     productPattern2:['id','name','description','active'],
-    product:['id','order', 'price', 'active','priceLast','discount','amount','barcode'],
+    product:['id','order', 'price', 'active','priceLast','discount','amount','barcode','rating','createdAt'],
 }
 const excludes={
     time:[ 'createdAt','updatedAt'],

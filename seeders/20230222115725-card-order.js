@@ -2,31 +2,36 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    let orders=[
+    let cardorders=[
       {
-        userId: 1,
-        storeId: 1,
-        addressId: 1,
-        deliveryId: 1,
-        statusId: 2,
-        active: 1,
+        cardId: 1,
+        orderId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        userId: 2,
-        storeId: 2,
-        addressId: 2,
-        deliveryId: 2,
-        statusId: 3,
-        active: 1,
+        cardId: 2,
+        orderId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        cardId: 1,
+        orderId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        cardId: 2,
+        orderId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
     ]
 
-    await queryInterface.bulkInsert('orders',orders , {});
+    await queryInterface.bulkInsert('cardorders',cardorders , {});
   },
+
 
   async down (queryInterface, Sequelize) {
     /**

@@ -21,32 +21,16 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: 1,
       },
-      address: {
-        type: Sequelize.STRING
-      },
       order: {
         type: Sequelize.INTEGER
       },
-      locId: {
+      addressId: {
         type: Sequelize.INTEGER,
+        primaryKey: true,
       },
-      latitude: {
-        type: Sequelize.DOUBLE
-      },
-      lingitude: {
-        type: Sequelize.DOUBLE
-      },
-      rate: {
-        type: Sequelize.DOUBLE
-      },
-      delivery_price: {
-        type: Sequelize.DOUBLE
-      },
-      delivery_price_ex: {
-        type: Sequelize.DOUBLE
-      },
-      delivery_free: {
-        type: Sequelize.DOUBLE
+      rating: {
+        defaultValue: 5,
+        type: Sequelize.DOUBLE,
       },
       createdAt: {
         allowNull: false,

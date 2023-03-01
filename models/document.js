@@ -66,13 +66,14 @@ module.exports = (sequelize, DataTypes) => {
       el.deletefile()
     });
   }
-  Document.clearOne=async(modelName,modelId,id)=>{
+  Document.clearOne=async(modelName,modelId,id,transaction=null)=>{
     let data = await Document.findOne({
       where:{
         modelName,
         modelId,
         id
-      }
+      },
+      transaction
     })
     if (data) {
       data.deletefile()

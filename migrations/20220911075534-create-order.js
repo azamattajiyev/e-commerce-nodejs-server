@@ -16,11 +16,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
       },
-      tel: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.STRING
+      addressId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
       },
       deliveryId: {
         type: Sequelize.INTEGER,

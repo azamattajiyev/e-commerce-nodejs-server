@@ -120,7 +120,7 @@ const generateRefreshToken = (user) =>{
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
 }
 const getUserTokens =async (username,) => {
-  let accessTokenLifeTime= '3600'
+  let accessTokenLifeTime= '36000'
   const user =await User.findOne({
     where:{
       username
