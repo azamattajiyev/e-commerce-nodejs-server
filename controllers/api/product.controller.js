@@ -997,6 +997,7 @@ exports.getAllProducts = async(req, res) => {
         attributes: ['id'],
       }, { transaction })
       let result=[]
+      
       for (let i = 0; i < data.rows.length; i++) {
         result.push(await Product.findOne({
           where:{id:data.rows[i].id,},
